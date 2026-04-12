@@ -214,14 +214,15 @@ export function Header({ title }: Readonly<HeaderProps>) {
           <Settings className="size-[20px]" aria-hidden />
         </Link>
 
-        <div
+        <section
           className="hidden items-center rounded-full border border-border bg-card px-3.5 py-1.5 shadow-card sm:flex"
+          aria-label="Available for disbursement"
           title="Available for disbursement"
         >
           <span className="font-mono text-xs font-semibold tabular-nums text-foreground md:text-[13px]">
             {formatPHP(balance.available)}
           </span>
-        </div>
+        </section>
 
         <div className="relative" ref={dropdownRef}>
           <button

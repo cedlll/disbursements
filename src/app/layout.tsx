@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { DM_Sans, DM_Mono } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import { Toaster } from "sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import "./globals.css";
@@ -36,6 +37,7 @@ export default function RootLayout({
           {children}
         </TooltipProvider>
         <Toaster richColors />
+        <Analytics />
       </body>
     </html>
   );

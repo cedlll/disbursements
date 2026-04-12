@@ -307,7 +307,7 @@ export default function NewDisbursementPage() {
               <div className="space-y-6 rounded-2xl bg-white/70 border border-[#E8EAE4]/60 backdrop-blur-sm p-5 shadow-card sm:p-7">
                 {/* Recipient */}
                 <div className="space-y-2">
-                  <Label className="text-sm font-medium text-[#1A1D18]">
+                  <Label htmlFor="disbursement-recipient" className="text-sm font-medium text-[#1A1D18]">
                     Recipient
                   </Label>
                   <Controller
@@ -318,7 +318,14 @@ export default function NewDisbursementPage() {
                         value={field.value}
                         onValueChange={(val) => field.onChange(val as string)}
                       >
-                        <SelectTrigger className="h-auto min-h-11 w-full whitespace-normal bg-white border border-[#E8EAE4] rounded-xl py-2.5 text-left text-[#1A1D18] focus:border-[#1C5C1C] focus:ring-2 focus:ring-[#1C5C1C]/10 *:data-[slot=select-value]:line-clamp-none *:data-[slot=select-value]:whitespace-normal">
+                        <SelectTrigger
+                          id="disbursement-recipient"
+                          aria-invalid={errors.recipientId ? true : undefined}
+                          aria-describedby={
+                            errors.recipientId ? "disbursement-recipient-error" : undefined
+                          }
+                          className="h-auto min-h-11 w-full whitespace-normal bg-white border border-[#E8EAE4] rounded-xl py-2.5 text-left text-[#1A1D18] focus:border-[#1C5C1C] focus:ring-2 focus:ring-[#1C5C1C]/10 *:data-[slot=select-value]:line-clamp-none *:data-[slot=select-value]:whitespace-normal"
+                        >
                           <SelectValue placeholder="Select a recipient">
                             {(val) => {
                               if (!val) return "Select a recipient";
@@ -343,40 +350,56 @@ export default function NewDisbursementPage() {
                     )}
                   />
                   {errors.recipientId && (
-                    <p className="text-sm text-[#C94A4A]">{errors.recipientId.message}</p>
+                    <p id="disbursement-recipient-error" className="text-sm text-[#C94A4A]" role="alert">
+                      {errors.recipientId.message}
+                    </p>
                   )}
                 </div>
 
                 {/* Amount */}
                 <div className="space-y-2">
-                  <Label className="text-sm font-medium text-[#1A1D18]">
+                  <Label htmlFor="disbursement-amount" className="text-sm font-medium text-[#1A1D18]">
                     Amount
                   </Label>
                   <Input
+                    id="disbursement-amount"
                     type="text"
                     placeholder="0.00"
+                    aria-invalid={errors.amount ? true : undefined}
+                    aria-describedby={
+                      errors.amount ? "disbursement-amount-error" : undefined
+                    }
                     className="h-11 bg-white border border-[#E8EAE4] rounded-xl text-[#1A1D18] placeholder:text-[#74796F] focus:border-[#1C5C1C] focus:ring-2 focus:ring-[#1C5C1C]/10"
                     {...amountField}
                     onBlur={handleAmountBlur}
                   />
                   {errors.amount && (
-                    <p className="text-sm text-[#C94A4A]">{errors.amount.message}</p>
+                    <p id="disbursement-amount-error" className="text-sm text-[#C94A4A]" role="alert">
+                      {errors.amount.message}
+                    </p>
                   )}
                 </div>
 
                 {/* Purpose */}
                 <div className="space-y-2">
-                  <Label className="text-sm font-medium text-[#1A1D18]">
+                  <Label htmlFor="disbursement-purpose" className="text-sm font-medium text-[#1A1D18]">
                     Purpose
                   </Label>
                   <Input
+                    id="disbursement-purpose"
                     type="text"
                     placeholder="e.g. Salary disbursement"
+                    aria-invalid={errors.purpose ? true : undefined}
+                    aria-describedby={
+                      errors.purpose ? "disbursement-purpose-error" : undefined
+                    }
                     className="h-11 bg-white border border-[#E8EAE4] rounded-xl text-[#1A1D18] placeholder:text-[#74796F] focus:border-[#1C5C1C] focus:ring-2 focus:ring-[#1C5C1C]/10"
                     {...register("purpose")}
                   />
                   {errors.purpose && (
-                    <p className="text-sm text-[#C94A4A]">{errors.purpose.message}</p>
+                    <p id="disbursement-purpose-error" className="text-sm text-[#C94A4A]" role="alert">
+                      {errors.purpose.message}
+                    </p>
                   )}
                 </div>
 
@@ -392,9 +415,10 @@ export default function NewDisbursementPage() {
                     <Tooltip>
                       <TooltipTrigger
                         render={<span />}
+                        aria-label="About disbursement date"
                         className="inline-flex cursor-help text-[#74796F] hover:text-[#1A1D18] transition-colors"
                       >
-                        <Info className="h-4 w-4" />
+                        <Info className="h-4 w-4" aria-hidden />
                       </TooltipTrigger>
                       <TooltipContent side="right">
                         Disbursements are processed in batches. Selecting today means next available batch.
@@ -414,6 +438,10 @@ export default function NewDisbursementPage() {
                           <PopoverTrigger
                             id="disbursement-date"
                             type="button"
+                            aria-invalid={errors.date ? true : undefined}
+                            aria-describedby={
+                              errors.date ? "disbursement-date-error" : undefined
+                            }
                             render={
                               <Button
                                 type="button"
@@ -459,17 +487,20 @@ export default function NewDisbursementPage() {
                     }}
                   />
                   {errors.date && (
-                    <p className="text-sm text-[#C94A4A]">{errors.date.message}</p>
+                    <p id="disbursement-date-error" className="text-sm text-[#C94A4A]" role="alert">
+                      {errors.date.message}
+                    </p>
                   )}
                 </div>
 
                 {/* Notes */}
                 <div className="space-y-2">
-                  <Label className="text-sm font-medium text-[#1A1D18]">
+                  <Label htmlFor="disbursement-notes" className="text-sm font-medium text-[#1A1D18]">
                     Notes{" "}
                     <span className="font-normal text-[#74796F]">(optional)</span>
                   </Label>
                   <Textarea
+                    id="disbursement-notes"
                     placeholder="Any additional notes..."
                     className="bg-white border border-[#E8EAE4] rounded-xl text-[#1A1D18] placeholder:text-[#74796F] min-h-[80px] focus:border-[#1C5C1C] focus:ring-2 focus:ring-[#1C5C1C]/10"
                     {...register("notes")}
@@ -512,7 +543,7 @@ export default function NewDisbursementPage() {
                     onClick={handleDownloadTemplate}
                     className="shrink-0 rounded-xl border-[#E8EAE4] bg-[#F0F2ED] text-[#1A1D18] hover:bg-[#E8EAE4] transition-colors"
                   >
-                    <Download className="mr-2 size-4" />
+                    <Download className="mr-2 size-4" aria-hidden />
                     Download
                   </Button>
                 </div>
@@ -541,7 +572,7 @@ export default function NewDisbursementPage() {
                 )}
                 {csvFileName && (
                   <div className="mt-4 inline-flex items-center gap-2 rounded-lg bg-[#FAFAF8] px-3 py-2 text-sm text-[#1A1D18]">
-                    <FileText className="h-4 w-4 text-[#74796F]" />
+                    <FileText className="h-4 w-4 text-[#74796F]" aria-hidden />
                     {csvFileName}
                   </div>
                 )}
@@ -575,7 +606,7 @@ export default function NewDisbursementPage() {
 
                   {csvResult.valid.length > 0 && (
                     <div className="flex items-center gap-2 text-[#1C5C1C]">
-                      <CheckCircle2 className="h-4 w-4" />
+                      <CheckCircle2 className="h-4 w-4" aria-hidden />
                       <span className="text-sm font-medium">
                         {csvResult.valid.length} valid row(s)
                       </span>
@@ -585,7 +616,7 @@ export default function NewDisbursementPage() {
                   {csvResult.invalid.length > 0 && (
                     <div className="space-y-2">
                       <div className="flex items-center gap-2 text-[#C94A4A]">
-                        <XCircle className="h-4 w-4" />
+                        <XCircle className="h-4 w-4" aria-hidden />
                         <span className="text-sm font-medium">
                           {csvResult.invalid.length} invalid row(s)
                         </span>

@@ -144,7 +144,7 @@ export default function SchedulePage() {
                         {opt.label}
                       </span>
                       {isSelected && (
-                        <Check className="h-3.5 w-3.5 text-[#1C5C1C]" />
+                        <Check className="h-3.5 w-3.5 text-[#1C5C1C]" aria-hidden />
                       )}
                     </div>
                     <p className="mt-1.5 text-sm leading-relaxed text-[#74796F]">

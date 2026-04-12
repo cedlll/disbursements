@@ -31,12 +31,14 @@ export default function DisbursementDetailPage() {
               The disbursement you&apos;re looking for doesn&apos;t exist or has
               been removed.
             </p>
-            <Link href="/dashboard">
-              <Button variant="outline" className="mt-6 rounded-xl">
-                <ArrowLeft className="size-4" />
-                Back to Dashboard
-              </Button>
-            </Link>
+            <Button
+              variant="outline"
+              className="mt-6 rounded-xl"
+              render={<Link href="/dashboard" />}
+            >
+              <ArrowLeft className="size-4" aria-hidden />
+              Back to Dashboard
+            </Button>
           </div>
         </div>
       </AppShell>
@@ -69,9 +71,9 @@ export default function DisbursementDetailPage() {
         </Link>
 
         <div className="min-w-0 space-y-2">
-          <p className="min-w-0 text-lg font-semibold text-[#1A1D18] sm:text-xl">
+          <h2 className="min-w-0 text-lg font-semibold text-[#1A1D18] sm:text-xl">
             {disbursement.recipientName}
-          </p>
+          </h2>
           <p className="font-mono text-2xl font-bold tabular-nums text-[#1A1D18] sm:text-3xl">
             {formatPHP(disbursement.amount)}
           </p>
@@ -90,11 +92,14 @@ export default function DisbursementDetailPage() {
             </p>
           )}
           <div className="mt-4 flex flex-wrap gap-3">
-            <Link href="/disbursements/new">
-              <Button variant="outline" size="sm" className="rounded-xl">
-                Edit &amp; Retry
-              </Button>
-            </Link>
+            <Button
+              variant="outline"
+              size="sm"
+              className="rounded-xl"
+              render={<Link href="/disbursements/new" />}
+            >
+              Edit &amp; Retry
+            </Button>
             <Button
               variant="ghost"
               size="sm"
