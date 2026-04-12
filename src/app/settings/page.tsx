@@ -42,7 +42,7 @@ const tierPillClass: Record<MerchantTier, string> = {
 const INITIAL_NOTIFICATION_PREFS = {
   payoutAlerts: true,
   weeklyDigest: false,
-} as const;
+} satisfies Record<"payoutAlerts" | "weeklyDigest", boolean>;
 
 function SwitchRow({
   id,
