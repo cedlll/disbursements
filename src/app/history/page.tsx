@@ -273,7 +273,7 @@ export default function HistoryPage() {
   const [statusFilter, setStatusFilter] = useState("all");
   const [recipientSearch, setRecipientSearch] = useState("");
   const [amountMin, setAmountMin] = useState("");
-  const [amountMax, setAmountMax] = useState("");
+  const [amountMax, setAmountMax] = useState("0");
 
   const filteredData = useMemo(() => {
     return disbursements.filter((d) => {
@@ -294,7 +294,7 @@ export default function HistoryPage() {
       )
         return false;
       if (amountMin && d.amount < Number(amountMin)) return false;
-      if (amountMax && d.amount > Number(amountMax)) return false;
+      if (Number(amountMax) > 0 && d.amount > Number(amountMax)) return false;
       return true;
     });
   }, [disbursements, dateFrom, dateTo, statusFilter, recipientSearch, amountMin, amountMax]);
@@ -326,7 +326,7 @@ export default function HistoryPage() {
     statusFilter !== "all" ||
     Boolean(recipientSearch) ||
     Boolean(amountMin) ||
-    Boolean(amountMax);
+    Number(amountMax) > 0;
 
   const clearAllFilters = () => {
     setDateFrom("");
@@ -334,7 +334,7 @@ export default function HistoryPage() {
     setStatusFilter("all");
     setRecipientSearch("");
     setAmountMin("");
-    setAmountMax("");
+    setAmountMax("0");
     table.setPageIndex(0);
   };
 
@@ -392,7 +392,11 @@ export default function HistoryPage() {
                 id="filter-status"
                 className="h-10 w-full rounded-xl border border-[#E8EAE4] bg-white text-[#1A1D18]"
               >
-                <SelectValue />
+                <SelectValue placeholder="All statuses">
+                  {(value: string) =>
+                    STATUS_OPTIONS.find((opt) => opt.value === value)?.label ?? value
+                  }
+                </SelectValue>
               </SelectTrigger>
               <SelectContent className="border border-[#E8EAE4] bg-white">
                 {STATUS_OPTIONS.map((opt) => (

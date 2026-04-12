@@ -12,9 +12,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Search,
-  RefreshCw,
 } from "lucide-react";
-import { toast } from "sonner";
 
 import { AppShell } from "@/components/layout/app-shell";
 import { StatusBadge } from "@/components/disbursements/status-badge";
@@ -60,11 +58,11 @@ function StatCard({
   iconWellClass,
 }: Readonly<StatCardProps>) {
   let changeBg =
-    "bg-emerald-500/12 text-emerald-700 ring-1 ring-emerald-500/15";
+    "bg-primary/12 text-primary ring-1 ring-primary/15";
   if (changeType === "negative") {
-    changeBg = "bg-red-500/10 text-red-700 ring-1 ring-red-500/15";
+    changeBg = "bg-destructive/10 text-destructive ring-1 ring-destructive/15";
   } else if (changeType === "neutral") {
-    changeBg = "bg-slate-100 text-slate-600 ring-1 ring-slate-200/80";
+    changeBg = "bg-muted text-muted-foreground ring-1 ring-border/80";
   }
 
   let TrendIcon: typeof TrendingUp | typeof TrendingDown | null = TrendingUp;
@@ -75,7 +73,7 @@ function StatCard({
   }
 
   return (
-    <div className="flex min-h-0 min-w-0 flex-col justify-between rounded-2xl border border-border bg-card p-4 shadow-card sm:p-5 md:p-6">
+    <div className="@container flex min-h-0 min-w-0 flex-col justify-between rounded-2xl border border-border bg-card p-4 shadow-card sm:p-5 md:p-6">
       <div className="flex min-w-0 items-start justify-between gap-3">
         <p className="min-w-0 flex-1 text-[10px] font-semibold uppercase leading-tight tracking-wider text-muted-foreground sm:text-[11px]">
           {label}
@@ -89,9 +87,11 @@ function StatCard({
       </div>
 
       <div className="mt-3 min-w-0 sm:mt-4">
-        <p className="min-w-0 font-mono text-sm font-bold leading-tight tracking-tight text-foreground tabular-nums sm:text-base sm:leading-none md:text-lg lg:text-xl xl:text-2xl">
-          {value}
-        </p>
+        <div className="min-w-0 max-w-full overflow-x-auto overscroll-x-contain [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <p className="inline-block min-w-0 whitespace-nowrap font-mono text-xs font-bold leading-none tracking-tight text-foreground tabular-nums @min-[10.5rem]:text-sm @min-[13.5rem]:text-base @min-[17rem]:text-lg @min-[21rem]:text-xl">
+            {value}
+          </p>
+        </div>
         <span
           className={`mt-2 inline-flex max-w-full items-center gap-0.5 rounded-full px-2 py-0.5 text-[10px] font-semibold leading-tight sm:max-w-[11rem] sm:text-[11px] ${changeBg}`}
         >
@@ -196,7 +196,7 @@ export default function DashboardPage() {
             change="10.5%"
             changeType="positive"
             subtitle={disbursedCoverage}
-            iconWellClass="bg-emerald-500/10 text-emerald-600"
+            iconWellClass="bg-primary/10 text-primary"
             icon={<ArrowUpRight className="size-[18px]" />}
           />
           <StatCard
@@ -205,7 +205,7 @@ export default function DashboardPage() {
             change="13.5%"
             changeType="positive"
             subtitle={snapshotCoverage}
-            iconWellClass="bg-emerald-500/10 text-emerald-600"
+            iconWellClass="bg-primary/10 text-primary"
             icon={<Wallet className="size-[18px]" />}
           />
           <StatCard
@@ -214,7 +214,7 @@ export default function DashboardPage() {
             change={`${pending.count} payout${pending.count === 1 ? "" : "s"}`}
             changeType="neutral"
             subtitle={snapshotCoverage}
-            iconWellClass="bg-slate-100 text-slate-600"
+            iconWellClass="bg-muted text-muted-foreground"
             icon={<Clock className="size-[18px]" />}
           />
           <StatCard
@@ -225,8 +225,8 @@ export default function DashboardPage() {
             subtitle={snapshotCoverage}
             iconWellClass={
               failed.count > 0
-                ? "bg-red-500/10 text-red-600"
-                : "bg-emerald-500/10 text-emerald-600"
+                ? "bg-destructive/10 text-destructive"
+                : "bg-primary/10 text-primary"
             }
             icon={<AlertCircle className="size-[18px]" />}
           />
@@ -242,30 +242,15 @@ export default function DashboardPage() {
                 Latest disbursements across your workspace
               </p>
             </div>
-            <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-center">
-              <div className="relative w-full sm:w-56">
-                <Search className="pointer-events-none absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-                <Input
-                  value={activityQuery}
-                  onChange={(e) => setActivityQuery(e.currentTarget.value)}
-                  placeholder="Search recipients…"
-                  className="h-9 rounded-xl border-border bg-background pl-9"
-                  aria-label="Search recent activity"
-                />
-              </div>
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                className="h-9 shrink-0 gap-1.5 rounded-xl border-border"
-                onClick={() => {
-                  setActivityQuery("");
-                  toast.message("Activity refreshed");
-                }}
-              >
-                <RefreshCw className="size-3.5" aria-hidden />
-                Refresh
-              </Button>
+            <div className="relative w-full sm:w-56">
+              <Search className="pointer-events-none absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                value={activityQuery}
+                onChange={(e) => setActivityQuery(e.currentTarget.value)}
+                placeholder="Search recipients…"
+                className="h-9 rounded-xl border-border bg-background pl-9"
+                aria-label="Search recent activity"
+              />
             </div>
           </div>
           <div ref={tableRef} className="overflow-x-auto">
