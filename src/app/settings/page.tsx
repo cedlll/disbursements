@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Link from "next/link";
 import {
   Bell,
@@ -22,7 +22,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { useAppStore } from "@/lib/store";
 import { formatPHP, type MerchantTier } from "@/lib/constants";
@@ -40,9 +39,10 @@ const tierPillClass: Record<MerchantTier, string> = {
   premium: "bg-[#FDF3CC] text-[#6B5200] ring-1 ring-[#E8D9A8]/80",
 };
 
-function persistNotificationPrefs() {
-  toast.success("Notification preferences saved");
-}
+const INITIAL_NOTIFICATION_PREFS = {
+  payoutAlerts: true,
+  weeklyDigest: false,
+} as const;
 
 function SwitchRow({
   id,
@@ -85,8 +85,25 @@ export default function SettingsPage() {
   const balance = useAppStore((s) => s.balance);
   const merchantTier = useAppStore((s) => s.merchantTier);
 
-  const [payoutAlerts, setPayoutAlerts] = useState(true);
-  const [weeklyDigest, setWeeklyDigest] = useState(false);
+  const [payoutAlerts, setPayoutAlerts] = useState(
+    INITIAL_NOTIFICATION_PREFS.payoutAlerts,
+  );
+  const [weeklyDigest, setWeeklyDigest] = useState(
+    INITIAL_NOTIFICATION_PREFS.weeklyDigest,
+  );
+  const savedNotificationPrefsRef = useRef({ ...INITIAL_NOTIFICATION_PREFS });
+
+  function handleSaveNotificationPrefs() {
+    const saved = savedNotificationPrefsRef.current;
+    if (
+      payoutAlerts === saved.payoutAlerts &&
+      weeklyDigest === saved.weeklyDigest
+    ) {
+      return;
+    }
+    savedNotificationPrefsRef.current = { payoutAlerts, weeklyDigest };
+    toast.success("Notification preferences saved");
+  }
 
   const sectionsRef = useStaggerReveal<HTMLDivElement>({
     y: 18,
@@ -164,26 +181,27 @@ export default function SettingsPage() {
               </div>
             </div>
           </CardHeader>
-          <CardContent className="pt-2">
-            <SwitchRow
-              id="settings-payout-alerts"
-              label="Payout status alerts"
-              description="Email when a disbursement completes or fails"
-              checked={payoutAlerts}
-              onCheckedChange={setPayoutAlerts}
-            />
-            <Separator className="bg-[#F0F2ED]" />
-            <SwitchRow
-              id="settings-weekly-digest"
-              label="Weekly summary"
-              description="A recap of volume and recipients"
-              checked={weeklyDigest}
-              onCheckedChange={setWeeklyDigest}
-            />
-            <div className="mt-4 flex justify-end">
+          <CardContent className="py-4">
+            <div className="divide-y divide-[#F0F2ED]">
+              <SwitchRow
+                id="settings-payout-alerts"
+                label="Payout status alerts"
+                description="Email when a disbursement completes or fails"
+                checked={payoutAlerts}
+                onCheckedChange={setPayoutAlerts}
+              />
+              <SwitchRow
+                id="settings-weekly-digest"
+                label="Weekly summary"
+                description="A recap of volume and recipients"
+                checked={weeklyDigest}
+                onCheckedChange={setWeeklyDigest}
+              />
+            </div>
+            <div className="mt-4 flex justify-end border-t border-[#F0F2ED] pt-4">
               <Button
                 type="button"
-                onClick={persistNotificationPrefs}
+                onClick={handleSaveNotificationPrefs}
                 className="h-11 rounded-xl bg-[#1C5C1C] px-6 text-white transition-colors hover:bg-[#144A14]"
               >
                 Save preferences
@@ -209,25 +227,17 @@ export default function SettingsPage() {
               </div>
             </div>
           </CardHeader>
-          <CardContent className="pt-4">
+          <CardContent className="py-4">
             <Link
               href="/schedule"
               className="flex items-center justify-between gap-3 rounded-xl border border-[#E8EAE4] bg-[#FAFAF8] px-4 py-3.5 text-left transition-colors hover:border-[#C5DCC2] hover:bg-white"
             >
-              <span className="flex items-center gap-3 min-w-0">
-                <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-white shadow-sm ring-1 ring-[#E8EAE4]">
-                  <CalendarClock
-                    className="size-[18px] text-[#1C5C1C]"
-                    aria-hidden
-                  />
+              <span className="min-w-0">
+                <span className="block text-sm font-medium text-[#1A1D18]">
+                  Payout schedule
                 </span>
-                <span className="min-w-0">
-                  <span className="block text-sm font-medium text-[#1A1D18]">
-                    Payout schedule
-                  </span>
-                  <span className="block text-xs text-[#74796F]">
-                    Change frequency and view next payout
-                  </span>
+                <span className="block text-xs text-[#74796F]">
+                  Change frequency and view next payout
                 </span>
               </span>
               <ChevronRight
@@ -252,7 +262,7 @@ export default function SettingsPage() {
               </div>
             </div>
           </CardHeader>
-          <CardContent className="pt-4">
+          <CardContent className="py-4">
             <p className="text-sm text-[#74796F]">
               Password changes and two-factor authentication will appear here in
               a future release.

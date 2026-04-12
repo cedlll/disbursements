@@ -40,7 +40,7 @@ import {
   type BankCode,
   type VerificationStatus,
 } from "@/lib/constants";
-import { UserPlus, Search } from "lucide-react";
+import { Pencil, Search, UserPlus } from "lucide-react";
 import { formatUtcMediumDate } from "@/lib/date-display";
 import { toast } from "sonner";
 import { useFadeIn, useTableReveal } from "@/lib/use-gsap";
@@ -61,9 +61,9 @@ const verificationStatuses: VerificationStatus[] = [
 ];
 
 const verificationDot: Record<VerificationStatus, string> = {
-  verified: "bg-[#4E8F4E]",
-  pending: "bg-[#F96B2F]",
-  failed: "bg-[#C94A4A]",
+  verified: "bg-primary",
+  pending: "bg-chart-4",
+  failed: "bg-destructive",
 };
 
 function RecipientEditCell({
@@ -76,10 +76,12 @@ function RecipientEditCell({
   return (
     <button
       type="button"
-      className="text-xs font-semibold text-[#1C5C1C] underline-offset-2 hover:underline"
+      className="inline-flex size-9 items-center justify-center rounded-lg text-primary transition-colors hover:bg-primary/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/30 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+      aria-label={`Edit recipient ${recipient.name}`}
+      title="Edit"
       onClick={() => onEdit(recipient)}
     >
-      Edit
+      <Pencil className="size-4 shrink-0" strokeWidth={2} aria-hidden />
     </button>
   );
 }
@@ -103,19 +105,19 @@ const columns = [
   columnHelper.accessor("name", {
     header: "Name",
     cell: (info) => (
-      <span className="font-medium text-[#1A1D18]">{info.getValue()}</span>
+      <span className="font-medium text-foreground">{info.getValue()}</span>
     ),
   }),
   columnHelper.accessor("bankCode", {
     header: "Bank",
     cell: (info) => (
-      <span className="text-[#74796F]">{getBankName(info.getValue())}</span>
+      <span className="text-muted-foreground">{getBankName(info.getValue())}</span>
     ),
   }),
   columnHelper.accessor("accountNumber", {
     header: "Account",
     cell: (info) => (
-      <span className="font-mono text-[#74796F]">
+      <span className="font-mono text-muted-foreground">
         {maskAccount(info.getValue())}
       </span>
     ),
@@ -126,7 +128,7 @@ const columns = [
     cell: (info) => {
       const val = info.getValue();
       return (
-        <span className="text-[#74796F]">
+        <span className="text-muted-foreground">
           {val ? formatUtcMediumDate(val) : "Never"}
         </span>
       );
@@ -305,18 +307,18 @@ function RecipientsPageContent() {
           <div className="w-full min-w-0 sm:max-w-xs">
             <Label
               htmlFor="recipients-search"
-              className="mb-2 block text-xs font-medium text-[#74796F]"
+              className="mb-2 block text-xs font-medium text-muted-foreground"
             >
               Search
             </Label>
             <div className="relative">
-              <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-[#74796F]" aria-hidden />
+              <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" aria-hidden />
               <Input
                 id="recipients-search"
                 placeholder="Search by name…"
                 value={globalFilter}
                 onChange={(e) => setGlobalFilter(e.currentTarget.value)}
-                className="h-10 bg-white pl-10 text-[#1A1D18] placeholder:text-[#74796F] border border-[#E8EAE4] rounded-xl focus:border-[#1C5C1C] focus:ring-2 focus:ring-[#1C5C1C]/10"
+                className="h-10 bg-white pl-10 text-foreground placeholder:text-muted-foreground border border-border rounded-xl focus:border-ring focus:ring-2 focus:ring-ring/10"
               />
             </div>
           </div>
@@ -324,16 +326,24 @@ function RecipientsPageContent() {
           <div className="w-full min-w-0 sm:w-auto">
             <Label
               htmlFor="recipients-filter-bank"
-              className="mb-2 block text-xs font-medium text-[#74796F]"
+              className="mb-2 block text-xs font-medium text-muted-foreground"
             >
               Bank
             </Label>
             <Select value={bankFilter} onValueChange={(val) => { if (val) setBankFilter(val); }}>
-            <SelectTrigger id="recipients-filter-bank" className="h-10 w-full min-w-[10rem] bg-white border-[#E8EAE4] rounded-xl text-[#1A1D18] sm:w-[11rem]">
-              <SelectValue placeholder="All Banks" />
+            <SelectTrigger id="recipients-filter-bank" className="h-10 w-full min-w-[10rem] bg-white border border-border rounded-xl text-foreground sm:w-[11rem]">
+              <SelectValue placeholder="All banks">
+                {(value) =>
+                  !value || value === "all"
+                    ? "All banks"
+                    : getBankName(value as BankCode)
+                }
+              </SelectValue>
             </SelectTrigger>
-            <SelectContent className="bg-white border-[#E8EAE4]">
-              <SelectItem value="all">All Banks</SelectItem>
+            <SelectContent className="bg-white border-border">
+              <SelectItem value="all" label="All banks">
+                All banks
+              </SelectItem>
               {PH_BANKS.map((bank) => (
                 <SelectItem key={bank.code} value={bank.code}>
                   {bank.name}
@@ -346,16 +356,24 @@ function RecipientsPageContent() {
           <div className="w-full min-w-0 sm:w-auto">
             <Label
               htmlFor="recipients-filter-status"
-              className="mb-2 block text-xs font-medium text-[#74796F]"
+              className="mb-2 block text-xs font-medium text-muted-foreground"
             >
               Verification
             </Label>
             <Select value={statusFilter} onValueChange={(val) => { if (val) setStatusFilter(val); }}>
-            <SelectTrigger id="recipients-filter-status" className="h-10 w-full min-w-[9rem] bg-white border-[#E8EAE4] rounded-xl text-[#1A1D18] sm:w-[10rem]">
-              <SelectValue placeholder="All Status" />
+            <SelectTrigger id="recipients-filter-status" className="h-10 w-full min-w-[9rem] bg-white border border-border rounded-xl text-foreground sm:w-[10rem]">
+              <SelectValue placeholder="All status">
+                {(value) =>
+                  !value || value === "all"
+                    ? "All status"
+                    : VERIFICATION_CONFIG[value as VerificationStatus].label
+                }
+              </SelectValue>
             </SelectTrigger>
-            <SelectContent className="bg-white border-[#E8EAE4]">
-              <SelectItem value="all">All Status</SelectItem>
+            <SelectContent className="bg-white border-border">
+              <SelectItem value="all" label="All status">
+                All status
+              </SelectItem>
               {verificationStatuses.map((s) => (
                 <SelectItem key={s} value={s}>
                   {VERIFICATION_CONFIG[s].label}
@@ -367,7 +385,7 @@ function RecipientsPageContent() {
         </div>
 
         <Button
-          className="h-10 shrink-0 rounded-xl bg-[#1C5C1C] px-5 text-white hover:bg-[#144A14] transition-colors"
+          className="h-10 shrink-0 rounded-xl bg-primary px-5 text-primary-foreground hover:bg-primary/90 transition-colors"
           onClick={openAddRecipientSheet}
         >
           <UserPlus className="mr-2 size-4" aria-hidden />
@@ -375,12 +393,12 @@ function RecipientsPageContent() {
         </Button>
       </div>
 
-      <div ref={tableRef} className="overflow-hidden rounded-2xl bg-white/70 border border-[#E8EAE4]/60 backdrop-blur-sm shadow-card">
+      <div ref={tableRef} className="overflow-hidden rounded-2xl bg-white/70 border border-border/60 backdrop-blur-sm shadow-card">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
               {table.getHeaderGroups().map((headerGroup) => (
-                <tr key={headerGroup.id} className="border-b border-[#F5F6F3]">
+                <tr key={headerGroup.id} className="border-b border-border">
                   {headerGroup.headers.map((header) => {
                     const sorted = header.column.getIsSorted();
                     const sortable = header.column.getCanSort();
@@ -395,12 +413,12 @@ function RecipientsPageContent() {
                       key={header.id}
                       scope="col"
                       aria-sort={ariaSort}
-                      className="px-5 py-4 text-left text-[11px] font-semibold uppercase tracking-wider text-[#74796F]"
+                      className="px-5 py-4 text-left text-[11px] font-semibold uppercase tracking-wider text-muted-foreground"
                     >
                       {sortable ? (
                         <button
                           type="button"
-                          className="-mx-1 inline-flex min-h-9 w-[calc(100%+0.5rem)] items-center gap-1 rounded-md px-1 py-1 text-left text-[11px] font-semibold uppercase tracking-wider text-[#74796F] transition-colors hover:text-[#1A1D18] focus-visible:ring-2 focus-visible:ring-[#1C5C1C]/30 focus-visible:outline-none"
+                          className="-mx-1 inline-flex min-h-9 w-[calc(100%+0.5rem)] items-center gap-1 rounded-md px-1 py-1 text-left text-[11px] font-semibold uppercase tracking-wider text-muted-foreground transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/30 focus-visible:outline-none"
                           onClick={header.column.getToggleSortingHandler()}
                         >
                           {header.isPlaceholder
@@ -432,7 +450,7 @@ function RecipientsPageContent() {
               {table.getRowModel().rows.map((row) => (
                 <tr
                   key={row.id}
-                  className="border-b border-[#F5F6F3] transition-colors hover:bg-[#FAFAF8]"
+                  className="border-b border-border transition-colors hover:bg-muted/70"
                 >
                   {row.getVisibleCells().map((cell) => (
                     <td key={cell.id} className="px-5 py-4">
@@ -450,7 +468,7 @@ function RecipientsPageContent() {
 
         {noResults && (
           <div className="flex flex-col items-center justify-center py-16 text-center">
-            <p className="max-w-sm text-sm leading-relaxed text-[#74796F]">
+            <p className="max-w-sm text-sm leading-relaxed text-muted-foreground">
               No matches. Try another name or filter.
             </p>
           </div>
@@ -469,17 +487,17 @@ function RecipientsPageContent() {
       >
         <SheetContent
           side="right"
-          className="bg-white border-[#E8EAE4] overflow-y-auto"
+          className="bg-white border-border overflow-y-auto"
         >
           <SheetHeader className="px-5 sm:px-6">
-            <SheetTitle className="text-lg text-[#1A1D18]">
+            <SheetTitle className="text-lg text-foreground">
               {sheetMode === "edit" ? "Edit recipient" : "Add recipient"}
             </SheetTitle>
           </SheetHeader>
 
           <div className="flex flex-col gap-6 px-5 pb-6 pt-1 sm:px-6">
             <div className="space-y-2">
-              <Label htmlFor="recipient-sheet-name" className="text-sm font-medium text-[#1A1D18]">
+              <Label htmlFor="recipient-sheet-name" className="text-sm font-medium text-foreground">
                 Name
               </Label>
               <Input
@@ -487,19 +505,19 @@ function RecipientsPageContent() {
                 placeholder="Recipient full name"
                 value={formName}
                 onChange={(e) => setFormName(e.currentTarget.value)}
-                className="h-11 bg-white border border-[#E8EAE4] rounded-xl text-[#1A1D18] placeholder:text-[#74796F] focus:border-[#1C5C1C] focus:ring-2 focus:ring-[#1C5C1C]/10"
+                className="h-11 bg-white border border-border rounded-xl text-foreground placeholder:text-muted-foreground focus:border-ring focus:ring-2 focus:ring-ring/10"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="recipient-sheet-bank" className="text-sm font-medium text-[#1A1D18]">
+              <Label htmlFor="recipient-sheet-bank" className="text-sm font-medium text-foreground">
                 Bank
               </Label>
               <Select value={formBank} onValueChange={(val) => { if (val) setFormBank(val); }}>
-                <SelectTrigger id="recipient-sheet-bank" className="h-11 w-full bg-white border-[#E8EAE4] rounded-xl text-[#1A1D18]">
+                <SelectTrigger id="recipient-sheet-bank" className="h-11 w-full bg-white border border-border rounded-xl text-foreground">
                   <SelectValue placeholder="Select bank" />
                 </SelectTrigger>
-                <SelectContent className="bg-white border-[#E8EAE4]">
+                <SelectContent className="bg-white border-border">
                   {PH_BANKS.map((bank) => (
                     <SelectItem key={bank.code} value={bank.code}>
                       {bank.name}
@@ -510,7 +528,7 @@ function RecipientsPageContent() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="recipient-sheet-account" className="text-sm font-medium text-[#1A1D18]">
+              <Label htmlFor="recipient-sheet-account" className="text-sm font-medium text-foreground">
                 Account Number
               </Label>
               <Input
@@ -518,12 +536,12 @@ function RecipientsPageContent() {
                 placeholder="Enter account number"
                 value={formAccount}
                 onChange={(e) => setFormAccount(e.currentTarget.value)}
-                className="h-11 bg-white border border-[#E8EAE4] rounded-xl text-[#1A1D18] placeholder:text-[#74796F] focus:border-[#1C5C1C] focus:ring-2 focus:ring-[#1C5C1C]/10"
+                className="h-11 bg-white border border-border rounded-xl text-foreground placeholder:text-muted-foreground focus:border-ring focus:ring-2 focus:ring-ring/10"
               />
             </div>
 
             <fieldset className="space-y-3 border-0 p-0 m-0">
-              <legend className="text-sm font-medium text-[#1A1D18]">
+              <legend className="text-sm font-medium text-foreground">
                 Account Type
               </legend>
               <RadioGroup
@@ -535,13 +553,13 @@ function RecipientsPageContent() {
               >
                 <div className="flex items-center gap-2">
                   <RadioGroupItem value="savings" id="recipient-sheet-account-savings" />
-                  <Label htmlFor="recipient-sheet-account-savings" className="cursor-pointer text-sm text-[#74796F]">
+                  <Label htmlFor="recipient-sheet-account-savings" className="cursor-pointer text-sm text-muted-foreground">
                     Savings
                   </Label>
                 </div>
                 <div className="flex items-center gap-2">
                   <RadioGroupItem value="checking" id="recipient-sheet-account-checking" />
-                  <Label htmlFor="recipient-sheet-account-checking" className="cursor-pointer text-sm text-[#74796F]">
+                  <Label htmlFor="recipient-sheet-account-checking" className="cursor-pointer text-sm text-muted-foreground">
                     Checking
                   </Label>
                 </div>
@@ -549,7 +567,7 @@ function RecipientsPageContent() {
             </fieldset>
 
             <Button
-              className="mt-4 h-11 w-full rounded-xl bg-[#1C5C1C] text-white hover:bg-[#144A14] transition-colors"
+              className="mt-4 h-11 w-full rounded-xl bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
               onClick={handleSaveRecipient}
             >
               {sheetMode === "edit" ? "Save changes" : "Save"}
@@ -566,7 +584,7 @@ export default function RecipientsPage() {
     <Suspense
       fallback={
         <AppShell title="Recipients">
-          <div className="mx-auto flex min-h-[12rem] max-w-[1280px] items-center justify-center text-sm text-[#74796F]">
+          <div className="mx-auto flex min-h-[12rem] max-w-[1280px] items-center justify-center text-sm text-muted-foreground">
             Loading…
           </div>
         </AppShell>

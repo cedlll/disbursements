@@ -2,8 +2,6 @@
 
 import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
 import {
   Bell,
   CheckCheck,
@@ -11,7 +9,6 @@ import {
   Info,
   CheckCircle2,
   AlertTriangle,
-  Settings,
   Plus,
 } from "lucide-react";
 import { useAppStore } from "@/lib/store";
@@ -31,10 +28,10 @@ const notificationIcons: Record<string, typeof Info> = {
 };
 
 const notificationColors: Record<string, string> = {
-  success: "text-[#2D6E2D]",
-  info: "text-[#1A52C4]",
-  warning: "text-[#8A6200]",
-  error: "text-[#B33E3E]",
+  success: "text-primary",
+  info: "text-chart-3",
+  warning: "text-chart-4",
+  error: "text-destructive",
 };
 
 type TeamPresence =
@@ -99,10 +96,8 @@ interface HeaderProps {
 }
 
 export function Header({ title }: Readonly<HeaderProps>) {
-  const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const settingsActive = pathname === "/settings" || pathname.startsWith("/settings/");
 
   const notifications = useAppStore((s) => s.notifications);
   const balance = useAppStore((s) => s.balance);
@@ -168,7 +163,7 @@ export function Header({ title }: Readonly<HeaderProps>) {
                   </div>
                   <span
                     className={`pointer-events-none absolute bottom-0 right-0 z-10 size-2.5 rounded-full border-2 border-background shadow-sm ${
-                      online ? "bg-emerald-500" : "bg-muted-foreground/55"
+                      online ? "bg-primary" : "bg-muted-foreground/55"
                     }`}
                     aria-hidden
                   />
@@ -183,7 +178,7 @@ export function Header({ title }: Readonly<HeaderProps>) {
                   <span className="flex items-center gap-1.5 text-xs font-normal leading-tight text-white/75">
                     <span
                       className={`size-1.5 shrink-0 rounded-full ${
-                        online ? "bg-emerald-400" : "bg-white/45"
+                        online ? "bg-sidebar-primary" : "bg-white/45"
                       }`}
                       aria-hidden
                     />
@@ -195,24 +190,13 @@ export function Header({ title }: Readonly<HeaderProps>) {
           })}
           <button
             type="button"
-            className="flex size-9 items-center justify-center rounded-full border-2 border-dashed border-border bg-background text-muted-foreground transition-colors hover:border-emerald-500/50 hover:text-emerald-600"
+            className="flex size-9 items-center justify-center rounded-full border-2 border-dashed border-border bg-background text-muted-foreground transition-colors hover:border-primary/50 hover:text-primary"
             aria-label="Invite team member"
             title="Invite"
           >
             <Plus className="size-4" />
           </button>
         </div>
-
-        <Link
-          href="/settings"
-          className={`flex size-10 items-center justify-center rounded-xl transition-colors hover:bg-secondary hover:text-foreground ${
-            settingsActive ? "bg-secondary text-foreground" : "text-muted-foreground"
-          }`}
-          aria-label="Settings"
-          title="Settings"
-        >
-          <Settings className="size-[20px]" aria-hidden />
-        </Link>
 
         <section
           className="hidden items-center rounded-full border border-border bg-card px-3.5 py-1.5 shadow-card sm:flex"
@@ -247,14 +231,14 @@ export function Header({ title }: Readonly<HeaderProps>) {
           {open && (
             <div className="absolute right-0 z-50 mt-3 w-[min(100vw-2rem,22rem)] overflow-hidden rounded-2xl border border-border bg-popover shadow-modal sm:w-96">
               <div className="flex items-start justify-between gap-4 border-b border-border px-5 py-5 sm:px-6 sm:py-5">
-                <span className="pt-0.5 text-sm font-semibold leading-tight text-[#1A1D18]">
+                <span className="pt-0.5 text-sm font-semibold leading-tight text-foreground">
                   Notifications
                 </span>
                 {unreadCount > 0 && (
                   <button
                     type="button"
                     onClick={() => markAllNotificationsRead()}
-                    className="flex shrink-0 items-center gap-2 rounded-xl px-3 py-2 text-xs font-medium text-emerald-600 underline-offset-2 transition-colors hover:bg-emerald-500/10 hover:underline"
+                    className="flex shrink-0 items-center gap-2 rounded-xl px-3 py-2 text-xs font-medium text-primary underline-offset-2 transition-colors hover:bg-primary/10 hover:underline"
                   >
                     <CheckCheck className="size-4 shrink-0" />
                     Mark all read
@@ -264,7 +248,7 @@ export function Header({ title }: Readonly<HeaderProps>) {
 
               <div className="max-h-80 overflow-y-auto px-5 py-5 sm:px-6 sm:py-6">
                 {notifications.length === 0 ? (
-                  <div className="px-2 py-16 text-center text-sm leading-relaxed text-[#74796F]">
+                  <div className="px-2 py-16 text-center text-sm leading-relaxed text-muted-foreground">
                     No notifications
                   </div>
                 ) : (
@@ -272,7 +256,7 @@ export function Header({ title }: Readonly<HeaderProps>) {
                     {notifications.map((n) => {
                       const Icon = notificationIcons[n.type] ?? Info;
                       const color =
-                        notificationColors[n.type] ?? "text-[#74796F]";
+                        notificationColors[n.type] ?? "text-muted-foreground";
 
                       return (
                         <li key={n.id}>
@@ -281,8 +265,8 @@ export function Header({ title }: Readonly<HeaderProps>) {
                             onClick={() => {
                               if (!n.read) markNotificationRead(n.id);
                             }}
-                            className={`w-full rounded-2xl px-5 py-4 text-left transition-colors hover:bg-[#F5F6F3] sm:py-5 ${
-                              n.read ? "" : "bg-[#F5F6F3]/60"
+                            className={`w-full rounded-2xl px-5 py-4 text-left transition-colors hover:bg-muted sm:py-5 ${
+                              n.read ? "" : "bg-muted/60"
                             }`}
                           >
                             <div className="flex items-start gap-4">
@@ -294,14 +278,14 @@ export function Header({ title }: Readonly<HeaderProps>) {
                                 <p
                                   className={`text-sm leading-relaxed ${
                                     n.read
-                                      ? "text-[#74796F]"
-                                      : "font-medium text-[#1A1D18]"
+                                      ? "text-muted-foreground"
+                                      : "font-medium text-foreground"
                                   }`}
                                 >
                                   {n.message}
                                 </p>
                                 <p
-                                  className="text-xs leading-relaxed text-[#74796F]"
+                                  className="text-xs leading-relaxed text-muted-foreground"
                                   suppressHydrationWarning
                                 >
                                   {formatDistanceToNow(n.timestamp, {
@@ -311,7 +295,7 @@ export function Header({ title }: Readonly<HeaderProps>) {
                               </div>
                               {!n.read && (
                                 <span
-                                  className="mt-2 size-2 shrink-0 rounded-full bg-emerald-500"
+                                  className="mt-2 size-2 shrink-0 rounded-full bg-primary"
                                   aria-hidden
                                 />
                               )}

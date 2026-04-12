@@ -2,11 +2,18 @@
 
 import { useState } from "react";
 import { formatUtcLongDate } from "@/lib/date-display";
-import { Calendar, Check } from "lucide-react";
+import { CalendarClock, Check } from "lucide-react";
 import { toast } from "sonner";
 
 import { AppShell } from "@/components/layout/app-shell";
 import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {
   Dialog,
@@ -78,42 +85,58 @@ export default function SchedulePage() {
   const selectedLabel =
     SCHEDULE_OPTIONS.find((o) => o.value === selected)?.label ?? selected;
   const nextDateForSelected = computeNextPayoutDate(selected);
+  const activeScheduleLabel =
+    SCHEDULE_OPTIONS.find((o) => o.value === payoutFrequency)?.label ??
+    payoutFrequency;
 
   return (
     <AppShell title="Schedule">
-      <div ref={sectionsRef} className="flex flex-col gap-8 lg:gap-10">
-      <div className="rounded-2xl bg-white/70 border border-[#E8EAE4]/60 backdrop-blur-sm p-5 shadow-card sm:p-7">
-        <h2 className="text-sm font-semibold text-[#1A1D18]">
-          Current schedule
-        </h2>
-        <div className="mt-5 flex flex-col gap-6 sm:flex-row sm:gap-12">
-          <div>
-            <p className="text-[11px] font-medium uppercase tracking-wider text-[#74796F]">
-              Frequency
-            </p>
-            <div className="mt-2 flex items-center gap-2">
-              <Calendar className="size-4 shrink-0 text-[#1A52C4]" aria-hidden />
-              <span className="text-sm font-medium text-[#1A1D18]">
-                {SCHEDULE_OPTIONS.find((o) => o.value === payoutFrequency)
-                  ?.label ?? payoutFrequency}
+      <div ref={sectionsRef} className="flex flex-col gap-5 sm:gap-6">
+        <Card className="rounded-2xl border-border shadow-none ring-0">
+          <CardHeader className="border-b border-border pb-4">
+            <div className="flex items-start gap-3">
+              <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-secondary">
+                <CalendarClock
+                  className="size-5 text-primary"
+                  aria-hidden
+                />
               </span>
+              <div className="min-w-0">
+                <CardTitle className="text-foreground">
+                  Current schedule
+                </CardTitle>
+                <CardDescription>
+                  Active payout cadence and next settlement date
+                </CardDescription>
+              </div>
             </div>
-          </div>
-          <div>
-            <p className="text-[11px] font-medium uppercase tracking-wider text-[#74796F]">
-              Next payout
-            </p>
-            <p className="mt-2 text-sm font-semibold text-[#1A1D18]">
-              {payoutFrequency === "on_demand"
-                ? "Available now"
-                : formatUtcLongDate(nextPayoutDate)}
-            </p>
-          </div>
-        </div>
-      </div>
+          </CardHeader>
+          <CardContent className="pt-3">
+            <dl className="divide-y divide-border">
+              <div className="grid grid-cols-1 gap-1.5 py-3.5 first:pt-0 md:grid-cols-[11rem_1fr] md:items-center md:gap-x-6 md:gap-y-0">
+                <dt className="text-xs font-medium text-muted-foreground">
+                  Frequency
+                </dt>
+                <dd className="min-w-0 truncate text-sm font-semibold text-foreground md:justify-self-end md:text-right">
+                  {activeScheduleLabel}
+                </dd>
+              </div>
+              <div className="grid grid-cols-1 gap-1 py-3.5 md:grid-cols-[11rem_1fr] md:items-center md:gap-x-6 md:gap-y-0">
+                <dt className="text-xs font-medium text-muted-foreground">
+                  Next payout
+                </dt>
+                <dd className="min-w-0 text-sm font-semibold text-foreground md:justify-self-end md:text-right">
+                  {payoutFrequency === "on_demand"
+                    ? "Available now"
+                    : formatUtcLongDate(nextPayoutDate)}
+                </dd>
+              </div>
+            </dl>
+          </CardContent>
+        </Card>
 
-      <div>
-        <h2 className="mb-5 text-sm font-semibold text-[#1A1D18]">
+        <div>
+        <h2 className="mb-5 text-sm font-semibold text-foreground">
           Change frequency
         </h2>
         <RadioGroup
@@ -125,8 +148,8 @@ export default function SchedulePage() {
             const isSelected = selected === opt.value;
 
             const optionStyle = isSelected
-              ? "border-[#1C5C1C] bg-[#1C5C1C]/[0.03] shadow-card"
-              : "border-[#E8EAE4] bg-white hover:border-[#1C5C1C]/30 hover:shadow-card";
+              ? "border-primary bg-primary/[0.03] shadow-card"
+              : "border-border bg-card hover:border-primary/30 hover:shadow-card";
 
             const rowId = `schedule-${opt.value}`;
             return (
@@ -140,14 +163,14 @@ export default function SchedulePage() {
                   </div>
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
-                      <span className="text-sm font-medium text-[#1A1D18]">
+                      <span className="text-sm font-medium text-foreground">
                         {opt.label}
                       </span>
                       {isSelected && (
-                        <Check className="h-3.5 w-3.5 text-[#1C5C1C]" aria-hidden />
+                        <Check className="h-3.5 w-3.5 text-primary" aria-hidden />
                       )}
                     </div>
-                    <p className="mt-1.5 text-sm leading-relaxed text-[#74796F]">
+                    <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
                       {opt.description}
                     </p>
                   </div>
@@ -161,7 +184,7 @@ export default function SchedulePage() {
           <Button
             disabled={!hasChanges}
             onClick={() => setConfirmOpen(true)}
-            className="h-11 rounded-xl bg-[#1C5C1C] px-6 text-white hover:bg-[#144A14] disabled:opacity-40 transition-colors"
+            className="h-11 rounded-xl bg-primary px-6 text-primary-foreground hover:bg-primary/90 disabled:opacity-40 transition-colors"
           >
             Save
           </Button>
@@ -169,34 +192,34 @@ export default function SchedulePage() {
       </div>
 
       <Dialog open={confirmOpen} onOpenChange={setConfirmOpen}>
-        <DialogContent className="bg-white rounded-2xl shadow-modal">
+        <DialogContent className="gap-4 rounded-2xl bg-white p-5 pr-11 shadow-modal sm:max-w-sm sm:gap-4 sm:pr-12">
           <DialogHeader>
-            <DialogTitle className="text-[#1A1D18] font-semibold">
+            <DialogTitle className="font-semibold text-foreground">
               Confirm Schedule Change
             </DialogTitle>
           </DialogHeader>
-          <DialogDescription className="text-[#74796F]">
+          <DialogDescription className="leading-relaxed">
             {`Changing to `}
-            <span className="font-medium text-[#1A1D18]">{selectedLabel}</span>
+            <span className="font-medium text-foreground">{selectedLabel}</span>
             {` payouts means your next payout will be `}
-            <span className="font-medium text-[#1A1D18]">
+            <span className="font-medium text-foreground">
               {selected === "on_demand"
                 ? "available immediately"
                 : formatUtcLongDate(nextDateForSelected)}
             </span>
             {`. Confirm?`}
           </DialogDescription>
-          <DialogFooter>
+          <DialogFooter className="-mb-5 -ml-5 -mr-11 mt-0 gap-2 p-4 sm:-mr-12 sm:gap-2">
             <Button
               variant="outline"
               onClick={() => setConfirmOpen(false)}
-              className="bg-[#F0F2ED] text-[#1A1D18] rounded-xl hover:bg-[#E8EAE4] transition-colors"
+              className="rounded-xl bg-secondary text-secondary-foreground hover:bg-muted"
             >
               Cancel
             </Button>
             <Button
               onClick={handleConfirm}
-              className="bg-[#1C5C1C] text-white rounded-xl hover:bg-[#144A14] transition-colors"
+              className="rounded-xl bg-primary text-primary-foreground hover:bg-primary/90"
             >
               Confirm
             </Button>

@@ -75,6 +75,17 @@ const schema = z.object({
 
 type FormValues = z.infer<typeof schema>;
 
+/** Digits and at most one `.` (commas stripped so pasted/formatted values still edit cleanly). */
+function sanitizeAmountInput(raw: string): string {
+  const withoutSeparators = raw.replace(/,/g, "");
+  let out = withoutSeparators.replace(/[^\d.]/g, "");
+  const dot = out.indexOf(".");
+  if (dot !== -1) {
+    out = out.slice(0, dot + 1) + out.slice(dot + 1).replace(/\./g, "");
+  }
+  return out;
+}
+
 interface ParsedRow {
   rowNumber: number;
   recipientName: string;
@@ -292,7 +303,7 @@ export default function NewDisbursementPage() {
     <AppShell title="New disbursement">
       <div ref={formRef} className="mx-auto max-w-3xl space-y-8">
         <Tabs defaultValue="single">
-          <TabsList className="mb-8 w-full justify-start gap-1 rounded-xl bg-[#F0F2ED] p-1 sm:w-auto">
+          <TabsList className="mb-8 w-full justify-start gap-1 rounded-xl bg-secondary p-1 sm:w-auto">
             <TabsTrigger value="single" className="rounded-[10px] px-5 py-2 text-sm font-medium">
               Single
             </TabsTrigger>
@@ -304,10 +315,10 @@ export default function NewDisbursementPage() {
           {/* ===== Single Transfer ===== */}
           <TabsContent value="single">
             <form onSubmit={handleSubmit(onSingleSubmit)} className="space-y-6 sm:space-y-8">
-              <div className="space-y-6 rounded-2xl bg-white/70 border border-[#E8EAE4]/60 backdrop-blur-sm p-5 shadow-card sm:p-7">
+              <div className="space-y-6 rounded-2xl bg-white/70 border border-border/60 backdrop-blur-sm p-5 shadow-card sm:p-7">
                 {/* Recipient */}
                 <div className="space-y-2">
-                  <Label htmlFor="disbursement-recipient" className="text-sm font-medium text-[#1A1D18]">
+                  <Label htmlFor="disbursement-recipient" className="text-sm font-medium text-foreground">
                     Recipient
                   </Label>
                   <Controller
@@ -324,7 +335,7 @@ export default function NewDisbursementPage() {
                           aria-describedby={
                             errors.recipientId ? "disbursement-recipient-error" : undefined
                           }
-                          className="h-auto min-h-11 w-full whitespace-normal bg-white border border-[#E8EAE4] rounded-xl py-2.5 text-left text-[#1A1D18] focus:border-[#1C5C1C] focus:ring-2 focus:ring-[#1C5C1C]/10 *:data-[slot=select-value]:line-clamp-none *:data-[slot=select-value]:whitespace-normal"
+                          className="h-auto min-h-11 w-full whitespace-normal bg-white border border-border rounded-xl py-2.5 text-left text-foreground focus:border-ring focus:ring-2 focus:ring-ring/10 *:data-[slot=select-value]:line-clamp-none *:data-[slot=select-value]:whitespace-normal"
                         >
                           <SelectValue placeholder="Select a recipient">
                             {(val) => {
@@ -350,7 +361,7 @@ export default function NewDisbursementPage() {
                     )}
                   />
                   {errors.recipientId && (
-                    <p id="disbursement-recipient-error" className="text-sm text-[#C94A4A]" role="alert">
+                    <p id="disbursement-recipient-error" className="text-sm text-destructive" role="alert">
                       {errors.recipientId.message}
                     </p>
                   )}
@@ -358,23 +369,29 @@ export default function NewDisbursementPage() {
 
                 {/* Amount */}
                 <div className="space-y-2">
-                  <Label htmlFor="disbursement-amount" className="text-sm font-medium text-[#1A1D18]">
+                  <Label htmlFor="disbursement-amount" className="text-sm font-medium text-foreground">
                     Amount
                   </Label>
                   <Input
                     id="disbursement-amount"
                     type="text"
+                    inputMode="decimal"
+                    autoComplete="off"
                     placeholder="0.00"
                     aria-invalid={errors.amount ? true : undefined}
                     aria-describedby={
                       errors.amount ? "disbursement-amount-error" : undefined
                     }
-                    className="h-11 bg-white border border-[#E8EAE4] rounded-xl text-[#1A1D18] placeholder:text-[#74796F] focus:border-[#1C5C1C] focus:ring-2 focus:ring-[#1C5C1C]/10"
+                    className="h-11 bg-white border border-border rounded-xl text-foreground placeholder:text-muted-foreground focus:border-ring focus:ring-2 focus:ring-ring/10"
                     {...amountField}
+                    onChange={(e) => {
+                      e.currentTarget.value = sanitizeAmountInput(e.currentTarget.value);
+                      amountField.onChange(e);
+                    }}
                     onBlur={handleAmountBlur}
                   />
                   {errors.amount && (
-                    <p id="disbursement-amount-error" className="text-sm text-[#C94A4A]" role="alert">
+                    <p id="disbursement-amount-error" className="text-sm text-destructive" role="alert">
                       {errors.amount.message}
                     </p>
                   )}
@@ -382,7 +399,7 @@ export default function NewDisbursementPage() {
 
                 {/* Purpose */}
                 <div className="space-y-2">
-                  <Label htmlFor="disbursement-purpose" className="text-sm font-medium text-[#1A1D18]">
+                  <Label htmlFor="disbursement-purpose" className="text-sm font-medium text-foreground">
                     Purpose
                   </Label>
                   <Input
@@ -393,11 +410,11 @@ export default function NewDisbursementPage() {
                     aria-describedby={
                       errors.purpose ? "disbursement-purpose-error" : undefined
                     }
-                    className="h-11 bg-white border border-[#E8EAE4] rounded-xl text-[#1A1D18] placeholder:text-[#74796F] focus:border-[#1C5C1C] focus:ring-2 focus:ring-[#1C5C1C]/10"
+                    className="h-11 bg-white border border-border rounded-xl text-foreground placeholder:text-muted-foreground focus:border-ring focus:ring-2 focus:ring-ring/10"
                     {...register("purpose")}
                   />
                   {errors.purpose && (
-                    <p id="disbursement-purpose-error" className="text-sm text-[#C94A4A]" role="alert">
+                    <p id="disbursement-purpose-error" className="text-sm text-destructive" role="alert">
                       {errors.purpose.message}
                     </p>
                   )}
@@ -408,7 +425,7 @@ export default function NewDisbursementPage() {
                   <div className="flex items-center gap-2">
                     <Label
                       htmlFor="disbursement-date"
-                      className="text-sm font-medium text-[#1A1D18]"
+                      className="text-sm font-medium text-foreground"
                     >
                       Date
                     </Label>
@@ -416,7 +433,7 @@ export default function NewDisbursementPage() {
                       <TooltipTrigger
                         render={<span />}
                         aria-label="About disbursement date"
-                        className="inline-flex cursor-help text-[#74796F] hover:text-[#1A1D18] transition-colors"
+                        className="inline-flex cursor-help text-muted-foreground hover:text-foreground transition-colors"
                       >
                         <Info className="h-4 w-4" aria-hidden />
                       </TooltipTrigger>
@@ -447,14 +464,14 @@ export default function NewDisbursementPage() {
                                 type="button"
                                 variant="outline"
                                 className={cn(
-                                  "h-11 w-full justify-start rounded-xl border border-[#E8EAE4] bg-white px-3.5 text-left text-sm font-normal text-[#1A1D18] shadow-none hover:bg-[#F9FAFB] focus-visible:border-[#1C5C1C] focus-visible:ring-2 focus-visible:ring-[#1C5C1C]/10",
-                                  !field.value && "text-[#74796F]",
+                                  "h-11 w-full justify-start rounded-xl border border-border bg-white px-3.5 text-left text-sm font-normal text-foreground shadow-none hover:bg-muted focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/10",
+                                  !field.value && "text-muted-foreground",
                                 )}
                               />
                             }
                           >
                             <CalendarDays
-                              className="mr-2 size-4 shrink-0 text-[#74796F]"
+                              className="mr-2 size-4 shrink-0 text-muted-foreground"
                               aria-hidden
                             />
                             {field.value
@@ -487,7 +504,7 @@ export default function NewDisbursementPage() {
                     }}
                   />
                   {errors.date && (
-                    <p id="disbursement-date-error" className="text-sm text-[#C94A4A]" role="alert">
+                    <p id="disbursement-date-error" className="text-sm text-destructive" role="alert">
                       {errors.date.message}
                     </p>
                   )}
@@ -495,22 +512,22 @@ export default function NewDisbursementPage() {
 
                 {/* Notes */}
                 <div className="space-y-2">
-                  <Label htmlFor="disbursement-notes" className="text-sm font-medium text-[#1A1D18]">
+                  <Label htmlFor="disbursement-notes" className="text-sm font-medium text-foreground">
                     Notes{" "}
-                    <span className="font-normal text-[#74796F]">(optional)</span>
+                    <span className="font-normal text-muted-foreground">(optional)</span>
                   </Label>
                   <Textarea
                     id="disbursement-notes"
                     placeholder="Any additional notes..."
-                    className="bg-white border border-[#E8EAE4] rounded-xl text-[#1A1D18] placeholder:text-[#74796F] min-h-[80px] focus:border-[#1C5C1C] focus:ring-2 focus:ring-[#1C5C1C]/10"
+                    className="bg-white border border-border rounded-xl text-foreground placeholder:text-muted-foreground min-h-[80px] focus:border-ring focus:ring-2 focus:ring-ring/10"
                     {...register("notes")}
                   />
                 </div>
               </div>
 
               {/* Processing Estimate */}
-              <div className="rounded-2xl bg-white/70 border border-[#E8EAE4]/60 backdrop-blur-sm p-5 shadow-card sm:p-7">
-                <h3 className="mb-5 text-sm font-semibold text-[#1A1D18]">
+              <div className="rounded-2xl bg-white/70 border border-border/60 backdrop-blur-sm p-5 shadow-card sm:p-7">
+                <h3 className="mb-5 text-sm font-semibold text-foreground">
                   Expected timeline
                 </h3>
                 <ProcessingEstimate status="queued" submittedAt={MOCK_NOW} />
@@ -519,7 +536,7 @@ export default function NewDisbursementPage() {
               <Button
                 type="submit"
                 disabled={isSubmitting}
-                className="h-12 w-full rounded-xl bg-[#1C5C1C] px-5 font-medium text-white hover:bg-[#144A14] transition-colors"
+                className="h-12 w-full rounded-xl bg-primary px-5 font-medium text-primary-foreground transition-colors hover:bg-primary/90"
               >
                 Schedule disbursement
               </Button>
@@ -532,8 +549,8 @@ export default function NewDisbursementPage() {
               <div className="rounded-2xl bg-white p-5 shadow-card sm:p-7">
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                   <div>
-                    <h3 className="text-sm font-semibold text-[#1A1D18]">CSV template</h3>
-                    <p className="mt-1.5 text-sm leading-relaxed text-[#74796F]">
+                    <h3 className="text-sm font-semibold text-foreground">CSV template</h3>
+                    <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
                       Download, fill in, then upload below.
                     </p>
                   </div>
@@ -541,7 +558,7 @@ export default function NewDisbursementPage() {
                     type="button"
                     variant="outline"
                     onClick={handleDownloadTemplate}
-                    className="shrink-0 rounded-xl border-[#E8EAE4] bg-[#F0F2ED] text-[#1A1D18] hover:bg-[#E8EAE4] transition-colors"
+                    className="shrink-0 rounded-xl border-border bg-secondary text-foreground hover:bg-muted transition-colors"
                   >
                     <Download className="mr-2 size-4" aria-hidden />
                     Download
@@ -554,25 +571,25 @@ export default function NewDisbursementPage() {
                 {...getRootProps()}
                 className={`cursor-pointer rounded-2xl border-2 border-dashed px-6 py-14 text-center transition-all sm:px-10 sm:py-16 ${
                   isDragActive
-                    ? "border-[#1C5C1C] bg-[#F5F6F3]/20"
-                    : "border-[#D4D9CE] bg-white hover:border-[#74796F]"
+                    ? "border-primary bg-muted/20"
+                    : "border-border bg-card hover:border-muted-foreground"
                 }`}
               >
                 <input {...getInputProps()} />
-                <Upload className="mx-auto mb-4 size-9 text-[#74796F]" aria-hidden />
+                <Upload className="mx-auto mb-4 size-9 text-muted-foreground" aria-hidden />
                 {isDragActive ? (
-                  <p className="text-[#1C5C1C] font-medium">Drop your CSV file here...</p>
+                  <p className="font-medium text-primary">Drop your CSV file here...</p>
                 ) : (
                   <>
-                    <p className="font-medium text-[#1A1D18]">
+                    <p className="font-medium text-foreground">
                       Drop a CSV here or tap to browse
                     </p>
-                    <p className="mt-2 text-sm text-[#74796F]">.csv only</p>
+                    <p className="mt-2 text-sm text-muted-foreground">.csv only</p>
                   </>
                 )}
                 {csvFileName && (
-                  <div className="mt-4 inline-flex items-center gap-2 rounded-lg bg-[#FAFAF8] px-3 py-2 text-sm text-[#1A1D18]">
-                    <FileText className="h-4 w-4 text-[#74796F]" aria-hidden />
+                  <div className="mt-4 inline-flex items-center gap-2 rounded-lg bg-muted/80 px-3 py-2 text-sm text-foreground">
+                    <FileText className="h-4 w-4 text-muted-foreground" aria-hidden />
                     {csvFileName}
                   </div>
                 )}
@@ -581,31 +598,33 @@ export default function NewDisbursementPage() {
               {/* Validation Panel */}
               {csvResult && (
                 <div className="space-y-5 rounded-2xl bg-white p-5 shadow-card sm:p-7">
-                  <h3 className="text-sm font-semibold text-[#1A1D18]">Check results</h3>
+                  <h3 className="text-sm font-semibold text-foreground">Check results</h3>
 
                   <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
-                    <div className="rounded-xl bg-[#F5F6F3] p-4">
-                      <p className="text-[11px] font-medium uppercase tracking-wider text-[#74796F]">Rows</p>
-                      <p className="mt-1 text-lg font-semibold text-[#1A1D18]">{csvResult.totalRows}</p>
+                    <div className="rounded-xl bg-muted p-4">
+                      <p className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">Rows</p>
+                      <p className="mt-1 text-lg font-semibold text-foreground">{csvResult.totalRows}</p>
                     </div>
-                    <div className="rounded-xl bg-[#F5F6F3] p-4">
-                      <p className="text-[11px] font-medium uppercase tracking-wider text-[#74796F]">Valid</p>
-                      <p className="mt-1 text-lg font-semibold text-[#1C5C1C]">{csvResult.valid.length}</p>
+                    <div className="rounded-xl bg-muted p-4">
+                      <p className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">Valid</p>
+                      <p className="mt-1 text-lg font-semibold text-primary">
+                        {csvResult.valid.length}
+                      </p>
                     </div>
-                    <div className="rounded-xl bg-[#F5F6F3] p-4">
-                      <p className="text-[11px] font-medium uppercase tracking-wider text-[#74796F]">Invalid</p>
-                      <p className="mt-1 text-lg font-semibold text-[#C94A4A]">{csvResult.invalid.length}</p>
+                    <div className="rounded-xl bg-muted p-4">
+                      <p className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">Invalid</p>
+                      <p className="mt-1 text-lg font-semibold text-destructive">{csvResult.invalid.length}</p>
                     </div>
-                    <div className="rounded-xl bg-[#F5F6F3] p-4">
-                      <p className="text-[11px] font-medium uppercase tracking-wider text-[#74796F]">Total</p>
-                      <p className="mt-1 text-lg font-semibold text-[#1A1D18]">
+                    <div className="rounded-xl bg-muted p-4">
+                      <p className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">Total</p>
+                      <p className="mt-1 text-lg font-semibold text-foreground">
                         {formatPHP(csvResult.totalAmount)}
                       </p>
                     </div>
                   </div>
 
                   {csvResult.valid.length > 0 && (
-                    <div className="flex items-center gap-2 text-[#1C5C1C]">
+                    <div className="flex items-center gap-2 text-primary">
                       <CheckCircle2 className="h-4 w-4" aria-hidden />
                       <span className="text-sm font-medium">
                         {csvResult.valid.length} valid row(s)
@@ -615,19 +634,19 @@ export default function NewDisbursementPage() {
 
                   {csvResult.invalid.length > 0 && (
                     <div className="space-y-2">
-                      <div className="flex items-center gap-2 text-[#C94A4A]">
+                      <div className="flex items-center gap-2 text-destructive">
                         <XCircle className="h-4 w-4" aria-hidden />
                         <span className="text-sm font-medium">
                           {csvResult.invalid.length} invalid row(s)
                         </span>
                       </div>
-                      <div className="max-h-48 overflow-y-auto rounded-lg bg-[#FAFAF8] p-3 space-y-1">
+                      <div className="max-h-48 overflow-y-auto rounded-lg bg-muted/80 p-3 space-y-1">
                         {csvResult.invalid.map((err) => (
                           <div key={err.rowNumber} className="flex items-start gap-2 text-xs">
-                            <span className="font-mono text-[#74796F] shrink-0">
+                            <span className="font-mono text-muted-foreground shrink-0">
                               Row {err.rowNumber}:
                             </span>
-                            <span className="text-[#C94A4A]">{err.reason}</span>
+                            <span className="text-destructive">{err.reason}</span>
                           </div>
                         ))}
                       </div>
@@ -638,7 +657,7 @@ export default function NewDisbursementPage() {
                     type="button"
                     onClick={() => setShowConfirmDialog(true)}
                     disabled={csvResult.invalid.length > 0 || csvResult.valid.length === 0}
-                    className="h-12 w-full bg-[#1C5C1C] hover:bg-[#144A14] text-white rounded-xl px-5 font-medium disabled:opacity-40 transition-colors"
+                    className="h-12 w-full rounded-xl bg-primary px-5 font-medium text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-40"
                   >
                     Schedule {csvResult.valid.length} Disbursement(s)
                   </Button>
@@ -648,26 +667,26 @@ export default function NewDisbursementPage() {
 
             {/* Confirmation Dialog */}
             <Dialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
-              <DialogContent className="bg-white border-[#E8EAE4] text-[#1A1D18]">
+              <DialogContent className="bg-white border-border text-foreground">
                 <DialogHeader>
-                  <DialogTitle className="text-[#1A1D18]">
+                  <DialogTitle className="text-foreground">
                     Confirm Bulk Disbursement
                   </DialogTitle>
                 </DialogHeader>
                 {csvResult && (
                   <div className="space-y-3 py-2">
                     <div className="flex justify-between text-sm">
-                      <span className="text-[#74796F]">Total disbursements</span>
+                      <span className="text-muted-foreground">Total disbursements</span>
                       <span className="font-medium">{csvResult.valid.length}</span>
                     </div>
                     <div className="flex justify-between text-sm">
-                      <span className="text-[#74796F]">Total amount</span>
-                      <span className="font-medium text-[#1C5C1C]">
+                      <span className="text-muted-foreground">Total amount</span>
+                      <span className="font-medium text-primary">
                         {formatPHP(csvResult.totalAmount)}
                       </span>
                     </div>
                     <div className="flex justify-between text-sm">
-                      <span className="text-[#74796F]">Status</span>
+                      <span className="text-muted-foreground">Status</span>
                       <span className="font-medium">Queued for next batch</span>
                     </div>
                   </div>
@@ -677,14 +696,14 @@ export default function NewDisbursementPage() {
                     type="button"
                     variant="outline"
                     onClick={() => setShowConfirmDialog(false)}
-                    className="border-[#E8EAE4] text-[#1A1D18]"
+                    className="border-border text-foreground"
                   >
                     Cancel
                   </Button>
                   <Button
                     type="button"
                     onClick={handleBulkSubmit}
-                    className="bg-[#1C5C1C] hover:bg-[#144A14] text-white rounded-xl px-5 py-2.5 font-medium transition-colors"
+                    className="rounded-xl bg-primary px-5 py-2.5 font-medium text-primary-foreground transition-colors hover:bg-primary/90"
                   >
                     Confirm & Schedule
                   </Button>

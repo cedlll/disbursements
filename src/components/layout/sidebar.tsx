@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -21,6 +22,15 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 const mainNav = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -117,6 +127,7 @@ export function Sidebar({
   onToggleCollapsed,
 }: Readonly<SidebarProps>) {
   const pathname = usePathname();
+  const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
 
   return (
     <aside
@@ -236,9 +247,10 @@ export function Sidebar({
             <Tooltip>
               <TooltipTrigger
                 render={
-                  <div
-                    className="flex size-10 shrink-0 cursor-default items-center justify-center rounded-full bg-emerald-500 text-sm font-semibold text-emerald-950"
-                    aria-label="Merchant, admin@merchant.ph"
+                  <Link
+                    href="/settings"
+                    className="flex size-10 shrink-0 items-center justify-center rounded-full bg-emerald-500 text-sm font-semibold text-emerald-950 outline-none ring-emerald-500/40 transition-colors hover:bg-emerald-400 focus-visible:ring-2"
+                    aria-label="Merchant, admin@merchant.ph — Settings"
                   />
                 }
               >
@@ -256,6 +268,7 @@ export function Sidebar({
                 render={
                   <button
                     type="button"
+                    onClick={() => setLogoutDialogOpen(true)}
                     className="flex size-9 shrink-0 items-center justify-center rounded-lg text-slate-400 transition-colors hover:bg-white/[0.06] hover:text-white"
                     aria-label="Log out"
                   />
@@ -269,22 +282,31 @@ export function Sidebar({
             </Tooltip>
           </div>
         ) : (
-          <div className="flex items-center gap-3 rounded-xl px-2 py-2 transition-colors hover:bg-white/[0.04]">
-            <div
-              className="flex size-10 shrink-0 items-center justify-center rounded-full bg-emerald-500 text-sm font-semibold text-emerald-950"
-              aria-hidden
+          <div className="group flex items-center gap-2 rounded-xl px-2 py-2 transition-colors hover:bg-white/[0.05]">
+            <Link
+              href="/settings"
+              className="flex min-w-0 flex-1 items-center gap-3 rounded-lg outline-none ring-emerald-500/40 transition-colors focus-visible:ring-2"
+              aria-label="Settings — Merchant, admin@merchant.ph"
             >
-              M
-            </div>
-            <div className="min-w-0 flex-1">
-              <p className="truncate text-sm font-semibold text-white">
-                Merchant
-              </p>
-              <p className="truncate text-xs text-slate-500">admin@merchant.ph</p>
-            </div>
+              <div
+                className="flex size-10 shrink-0 items-center justify-center rounded-full bg-emerald-500 text-sm font-semibold text-emerald-950"
+                aria-hidden
+              >
+                M
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-sm font-semibold text-white">
+                  Merchant
+                </p>
+                <p className="truncate text-xs text-slate-500">
+                  admin@merchant.ph
+                </p>
+              </div>
+            </Link>
             <button
               type="button"
-              className="flex size-9 shrink-0 items-center justify-center rounded-lg text-slate-400 transition-colors hover:bg-white/[0.06] hover:text-white"
+              onClick={() => setLogoutDialogOpen(true)}
+              className="flex size-9 shrink-0 items-center justify-center rounded-lg text-slate-400 transition-colors group-hover:text-slate-300 hover:bg-white/[0.08] hover:text-white"
               aria-label="Log out"
               title="Log out"
             >
@@ -293,6 +315,33 @@ export function Sidebar({
           </div>
         )}
       </div>
+
+      <Dialog open={logoutDialogOpen} onOpenChange={setLogoutDialogOpen}>
+        <DialogContent className="gap-4 sm:max-w-sm">
+          <DialogHeader>
+            <DialogTitle>Log out?</DialogTitle>
+            <DialogDescription>
+              You will need to sign in again to access your merchant account.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter showCloseButton={false}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setLogoutDialogOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="button"
+              variant="destructive"
+              onClick={() => setLogoutDialogOpen(false)}
+            >
+              Log out
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </aside>
   );
 }
