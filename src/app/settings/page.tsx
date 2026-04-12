@@ -42,7 +42,7 @@ const tierPillClass: Record<MerchantTier, string> = {
 const INITIAL_NOTIFICATION_PREFS = {
   payoutAlerts: true,
   weeklyDigest: false,
-} as const;
+} satisfies Record<"payoutAlerts" | "weeklyDigest", boolean>;
 
 function SwitchRow({
   id,
@@ -85,13 +85,16 @@ export default function SettingsPage() {
   const balance = useAppStore((s) => s.balance);
   const merchantTier = useAppStore((s) => s.merchantTier);
 
-  const [payoutAlerts, setPayoutAlerts] = useState(
+  const [payoutAlerts, setPayoutAlerts] = useState<boolean>(
     INITIAL_NOTIFICATION_PREFS.payoutAlerts,
   );
-  const [weeklyDigest, setWeeklyDigest] = useState(
+  const [weeklyDigest, setWeeklyDigest] = useState<boolean>(
     INITIAL_NOTIFICATION_PREFS.weeklyDigest,
   );
-  const savedNotificationPrefsRef = useRef({ ...INITIAL_NOTIFICATION_PREFS });
+  const savedNotificationPrefsRef = useRef<{
+    payoutAlerts: boolean;
+    weeklyDigest: boolean;
+  }>({ ...INITIAL_NOTIFICATION_PREFS });
 
   function handleSaveNotificationPrefs() {
     const saved = savedNotificationPrefsRef.current;
