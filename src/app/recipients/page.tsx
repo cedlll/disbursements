@@ -301,19 +301,35 @@ function RecipientsPageContent() {
     <AppShell title="Recipients">
       <div className="flex flex-col gap-6 sm:gap-8">
       <div ref={filtersRef} className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-        <div className="flex min-w-0 flex-1 flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
-          <div className="relative w-full min-w-0 sm:max-w-xs">
-            <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-[#74796F]" aria-hidden />
-            <Input
-              placeholder="Search by name…"
-              value={globalFilter}
-              onChange={(e) => setGlobalFilter(e.currentTarget.value)}
-              className="h-10 bg-white pl-10 text-[#1A1D18] placeholder:text-[#74796F] border border-[#E8EAE4] rounded-xl focus:border-[#1C5C1C] focus:ring-2 focus:ring-[#1C5C1C]/10"
-            />
+        <div className="flex min-w-0 flex-1 flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-end">
+          <div className="w-full min-w-0 sm:max-w-xs">
+            <Label
+              htmlFor="recipients-search"
+              className="mb-2 block text-xs font-medium text-[#74796F]"
+            >
+              Search
+            </Label>
+            <div className="relative">
+              <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-[#74796F]" aria-hidden />
+              <Input
+                id="recipients-search"
+                placeholder="Search by name…"
+                value={globalFilter}
+                onChange={(e) => setGlobalFilter(e.currentTarget.value)}
+                className="h-10 bg-white pl-10 text-[#1A1D18] placeholder:text-[#74796F] border border-[#E8EAE4] rounded-xl focus:border-[#1C5C1C] focus:ring-2 focus:ring-[#1C5C1C]/10"
+              />
+            </div>
           </div>
 
-          <Select value={bankFilter} onValueChange={(val) => { if (val) setBankFilter(val); }}>
-            <SelectTrigger className="h-10 w-full min-w-[10rem] bg-white border-[#E8EAE4] rounded-xl text-[#1A1D18] sm:w-[11rem]">
+          <div className="w-full min-w-0 sm:w-auto">
+            <Label
+              htmlFor="recipients-filter-bank"
+              className="mb-2 block text-xs font-medium text-[#74796F]"
+            >
+              Bank
+            </Label>
+            <Select value={bankFilter} onValueChange={(val) => { if (val) setBankFilter(val); }}>
+            <SelectTrigger id="recipients-filter-bank" className="h-10 w-full min-w-[10rem] bg-white border-[#E8EAE4] rounded-xl text-[#1A1D18] sm:w-[11rem]">
               <SelectValue placeholder="All Banks" />
             </SelectTrigger>
             <SelectContent className="bg-white border-[#E8EAE4]">
@@ -325,9 +341,17 @@ function RecipientsPageContent() {
               ))}
             </SelectContent>
           </Select>
+          </div>
 
-          <Select value={statusFilter} onValueChange={(val) => { if (val) setStatusFilter(val); }}>
-            <SelectTrigger className="h-10 w-full min-w-[9rem] bg-white border-[#E8EAE4] rounded-xl text-[#1A1D18] sm:w-[10rem]">
+          <div className="w-full min-w-0 sm:w-auto">
+            <Label
+              htmlFor="recipients-filter-status"
+              className="mb-2 block text-xs font-medium text-[#74796F]"
+            >
+              Verification
+            </Label>
+            <Select value={statusFilter} onValueChange={(val) => { if (val) setStatusFilter(val); }}>
+            <SelectTrigger id="recipients-filter-status" className="h-10 w-full min-w-[9rem] bg-white border-[#E8EAE4] rounded-xl text-[#1A1D18] sm:w-[10rem]">
               <SelectValue placeholder="All Status" />
             </SelectTrigger>
             <SelectContent className="bg-white border-[#E8EAE4]">
@@ -339,6 +363,7 @@ function RecipientsPageContent() {
               ))}
             </SelectContent>
           </Select>
+          </div>
         </div>
 
         <Button
@@ -356,28 +381,50 @@ function RecipientsPageContent() {
             <thead>
               {table.getHeaderGroups().map((headerGroup) => (
                 <tr key={headerGroup.id} className="border-b border-[#F5F6F3]">
-                  {headerGroup.headers.map((header) => (
+                  {headerGroup.headers.map((header) => {
+                    const sorted = header.column.getIsSorted();
+                    const sortable = header.column.getCanSort();
+                    let ariaSort: "ascending" | "descending" | "none" | undefined;
+                    if (sortable) {
+                      if (sorted === "asc") ariaSort = "ascending";
+                      else if (sorted === "desc") ariaSort = "descending";
+                      else ariaSort = "none";
+                    }
+                    return (
                     <th
                       key={header.id}
-                      className="px-5 py-4 text-left text-[11px] font-semibold uppercase tracking-wider text-[#74796F] select-none"
-                      onClick={header.column.getToggleSortingHandler()}
-                      style={{
-                        cursor: header.column.getCanSort()
-                          ? "pointer"
-                          : "default",
-                      }}
+                      scope="col"
+                      aria-sort={ariaSort}
+                      className="px-5 py-4 text-left text-[11px] font-semibold uppercase tracking-wider text-[#74796F]"
                     >
-                      <div className="flex items-center gap-1">
-                        {header.isPlaceholder
-                          ? null
-                          : flexRender(
-                              header.column.columnDef.header,
-                              header.getContext()
-                            )}
-                        {getSortIndicator(header.column.getIsSorted())}
-                      </div>
+                      {sortable ? (
+                        <button
+                          type="button"
+                          className="-mx-1 inline-flex min-h-9 w-[calc(100%+0.5rem)] items-center gap-1 rounded-md px-1 py-1 text-left text-[11px] font-semibold uppercase tracking-wider text-[#74796F] transition-colors hover:text-[#1A1D18] focus-visible:ring-2 focus-visible:ring-[#1C5C1C]/30 focus-visible:outline-none"
+                          onClick={header.column.getToggleSortingHandler()}
+                        >
+                          {header.isPlaceholder
+                            ? null
+                            : flexRender(
+                                header.column.columnDef.header,
+                                header.getContext()
+                              )}
+                          {getSortIndicator(sorted)}
+                        </button>
+                      ) : (
+                        <div className="flex items-center gap-1">
+                          {header.isPlaceholder
+                            ? null
+                            : flexRender(
+                                header.column.columnDef.header,
+                                header.getContext()
+                              )}
+                          {getSortIndicator(sorted)}
+                        </div>
+                      )}
                     </th>
-                  ))}
+                    );
+                  })}
                 </tr>
               ))}
             </thead>
@@ -432,8 +479,11 @@ function RecipientsPageContent() {
 
           <div className="flex flex-col gap-6 px-5 pb-6 pt-1 sm:px-6">
             <div className="space-y-2">
-              <Label className="text-sm font-medium text-[#1A1D18]">Name</Label>
+              <Label htmlFor="recipient-sheet-name" className="text-sm font-medium text-[#1A1D18]">
+                Name
+              </Label>
               <Input
+                id="recipient-sheet-name"
                 placeholder="Recipient full name"
                 value={formName}
                 onChange={(e) => setFormName(e.currentTarget.value)}
@@ -442,9 +492,11 @@ function RecipientsPageContent() {
             </div>
 
             <div className="space-y-2">
-              <Label className="text-sm font-medium text-[#1A1D18]">Bank</Label>
+              <Label htmlFor="recipient-sheet-bank" className="text-sm font-medium text-[#1A1D18]">
+                Bank
+              </Label>
               <Select value={formBank} onValueChange={(val) => { if (val) setFormBank(val); }}>
-                <SelectTrigger className="h-11 w-full bg-white border-[#E8EAE4] rounded-xl text-[#1A1D18]">
+                <SelectTrigger id="recipient-sheet-bank" className="h-11 w-full bg-white border-[#E8EAE4] rounded-xl text-[#1A1D18]">
                   <SelectValue placeholder="Select bank" />
                 </SelectTrigger>
                 <SelectContent className="bg-white border-[#E8EAE4]">
@@ -458,8 +510,11 @@ function RecipientsPageContent() {
             </div>
 
             <div className="space-y-2">
-              <Label className="text-sm font-medium text-[#1A1D18]">Account Number</Label>
+              <Label htmlFor="recipient-sheet-account" className="text-sm font-medium text-[#1A1D18]">
+                Account Number
+              </Label>
               <Input
+                id="recipient-sheet-account"
                 placeholder="Enter account number"
                 value={formAccount}
                 onChange={(e) => setFormAccount(e.currentTarget.value)}
@@ -467,8 +522,10 @@ function RecipientsPageContent() {
               />
             </div>
 
-            <div className="space-y-3">
-              <Label className="text-sm font-medium text-[#1A1D18]">Account Type</Label>
+            <fieldset className="space-y-3 border-0 p-0 m-0">
+              <legend className="text-sm font-medium text-[#1A1D18]">
+                Account Type
+              </legend>
               <RadioGroup
                 value={formAccountType}
                 onValueChange={(val: string) =>
@@ -477,19 +534,19 @@ function RecipientsPageContent() {
                 className="flex gap-6"
               >
                 <div className="flex items-center gap-2">
-                  <RadioGroupItem value="savings" />
-                  <Label className="cursor-pointer text-sm text-[#74796F]">
+                  <RadioGroupItem value="savings" id="recipient-sheet-account-savings" />
+                  <Label htmlFor="recipient-sheet-account-savings" className="cursor-pointer text-sm text-[#74796F]">
                     Savings
                   </Label>
                 </div>
                 <div className="flex items-center gap-2">
-                  <RadioGroupItem value="checking" />
-                  <Label className="cursor-pointer text-sm text-[#74796F]">
+                  <RadioGroupItem value="checking" id="recipient-sheet-account-checking" />
+                  <Label htmlFor="recipient-sheet-account-checking" className="cursor-pointer text-sm text-[#74796F]">
                     Checking
                   </Label>
                 </div>
               </RadioGroup>
-            </div>
+            </fieldset>
 
             <Button
               className="mt-4 h-11 w-full rounded-xl bg-[#1C5C1C] text-white hover:bg-[#144A14] transition-colors"

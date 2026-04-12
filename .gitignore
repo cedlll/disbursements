@@ -23,6 +23,14 @@
 # misc
 .DS_Store
 *.pem
+Thumbs.db
+
+# IDE / editor (machine-local; do not publish)
+.cursor/
+.idea/
+
+# local logs (debug, agents, ad-hoc)
+*.log
 
 # debug
 npm-debug.log*

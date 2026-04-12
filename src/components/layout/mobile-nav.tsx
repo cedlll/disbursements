@@ -8,6 +8,7 @@ import {
   Users,
   Calendar,
   History,
+  Settings,
 } from "lucide-react";
 import { isNavActive } from "@/lib/nav";
 
@@ -17,6 +18,7 @@ const navItems = [
   { href: "/recipients", label: "People", icon: Users },
   { href: "/schedule", label: "Plan", icon: Calendar },
   { href: "/history", label: "History", icon: History },
+  { href: "/settings", label: "Settings", icon: Settings },
 ] as const;
 
 export function MobileNav() {

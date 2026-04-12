@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import type { ReactNode } from "react";
 import {
   ArrowUpRight,
   Wallet,
@@ -45,7 +46,7 @@ interface StatCardProps {
   change: string;
   changeType: "positive" | "negative" | "neutral";
   subtitle: string;
-  icon: React.ReactNode;
+  icon: ReactNode;
   iconWellClass: string;
 }
 
@@ -81,6 +82,7 @@ function StatCard({
         </p>
         <span
           className={`flex size-8 shrink-0 items-center justify-center rounded-xl sm:size-9 ${iconWellClass}`}
+          aria-hidden
         >
           {icon}
         </span>
@@ -301,8 +303,16 @@ export default function DashboardPage() {
                   recentDisbursements.map((d) => (
                     <tr
                       key={d.id}
-                      className="cursor-pointer border-b border-border transition-colors last:border-b-0 hover:bg-muted/40"
+                      tabIndex={0}
+                      className="cursor-pointer border-b border-border transition-colors last:border-b-0 hover:bg-muted/40 focus-visible:bg-muted/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                      aria-label={`Open disbursement details for ${d.recipientName}, ${formatPHP(d.amount)}`}
                       onClick={() => openDrawer(d)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
+                          openDrawer(d);
+                        }
+                      }}
                     >
                       <td className="px-5 py-3.5 text-sm font-medium text-foreground">
                         {d.recipientName}

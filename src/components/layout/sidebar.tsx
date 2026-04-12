@@ -172,6 +172,7 @@ export function Sidebar({
           )}
           aria-expanded={!collapsed}
           aria-controls="app-sidebar-nav"
+          aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
           title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
         >
           {collapsed ? (

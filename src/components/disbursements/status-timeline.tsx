@@ -32,7 +32,9 @@ function stepIndicator(state: StepState): ReactNode {
       />
     );
   }
-  if (state === "failed") return "!";
+  if (state === "failed") {
+    return <span aria-hidden>!</span>;
+  }
   return null;
 }
 

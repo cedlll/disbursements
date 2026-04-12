@@ -112,11 +112,11 @@ export default function SettingsPage() {
           </CardHeader>
           <CardContent className="pt-3">
             <dl className="divide-y divide-[#F0F2ED]">
-              <div className="flex flex-col gap-1.5 py-3.5 first:pt-0 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
-                <dt className="shrink-0 text-xs font-medium text-[#74796F]">
+              <div className="grid grid-cols-1 gap-1.5 py-3.5 first:pt-0 md:grid-cols-[11rem_1fr] md:items-center md:gap-x-6 md:gap-y-0">
+                <dt className="text-xs font-medium text-[#74796F]">
                   Registered as
                 </dt>
-                <dd className="flex min-w-0 flex-wrap items-center gap-2 sm:justify-end">
+                <dd className="flex min-w-0 flex-wrap items-center gap-2 md:justify-self-end">
                   <span className="text-sm font-semibold text-[#1A1D18]">
                     Merchant
                   </span>
@@ -130,19 +130,19 @@ export default function SettingsPage() {
                   </span>
                 </dd>
               </div>
-              <div className="flex flex-col gap-1 py-3.5 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6">
-                <dt className="shrink-0 text-xs font-medium text-[#74796F]">
+              <div className="grid grid-cols-1 gap-1 py-3.5 md:grid-cols-[11rem_1fr] md:items-center md:gap-x-6 md:gap-y-0">
+                <dt className="text-xs font-medium text-[#74796F]">
                   Email
                 </dt>
-                <dd className="min-w-0 truncate text-sm text-[#1A1D18] sm:text-right">
+                <dd className="min-w-0 truncate text-sm text-[#1A1D18] md:justify-self-end md:text-right">
                   admin@merchant.ph
                 </dd>
               </div>
-              <div className="flex flex-col gap-1 py-3.5 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6">
-                <dt className="shrink-0 text-xs font-medium text-[#74796F]">
+              <div className="grid grid-cols-1 gap-1 py-3.5 md:grid-cols-[11rem_1fr] md:items-center md:gap-x-6 md:gap-y-0">
+                <dt className="text-xs font-medium text-[#74796F]">
                   Available balance
                 </dt>
-                <dd className="font-mono text-sm font-semibold tabular-nums text-[#1A1D18] sm:text-right">
+                <dd className="min-w-0 font-mono text-sm font-semibold tabular-nums text-[#1A1D18] md:justify-self-end md:text-right">
                   {formatPHP(balance.available)}
                 </dd>
               </div>

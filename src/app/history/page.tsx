@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import type { Matcher } from "react-day-picker";
 import {
   useReactTable,
@@ -64,7 +64,12 @@ const columns = [
   columnHelper.accessor("recipientName", {
     header: "Recipient",
     cell: (info) => (
-      <span className="font-medium text-[#1A1D18]">{info.getValue()}</span>
+      <Link
+        href={`/disbursements/${info.row.original.id}`}
+        className="font-medium text-[#1A1D18] hover:underline focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1C5C1C]/30"
+      >
+        {info.getValue()}
+      </Link>
     ),
   }),
   columnHelper.accessor("bankCode", {
@@ -261,7 +266,6 @@ function exportCSV(data: Disbursement[]) {
 }
 
 export default function HistoryPage() {
-  const router = useRouter();
   const { disbursements } = useAppStore();
 
   const [dateFrom, setDateFrom] = useState("");
@@ -474,30 +478,59 @@ export default function HistoryPage() {
                 key={headerGroup.id}
                 className="border-b border-[#F5F6F3]"
               >
-                {headerGroup.headers.map((header) => (
-                  <th
-                    key={header.id}
-                    className={`px-5 py-4 text-[11px] font-semibold uppercase tracking-wider text-[#74796F] ${
-                      header.column.id === "status"
-                        ? "text-right"
-                        : "text-left"
-                    } ${
-                      header.column.getCanSort()
-                        ? "cursor-pointer select-none hover:text-[#1A1D18]"
-                        : ""
-                    }`}
-                    onClick={header.column.getToggleSortingHandler()}
-                  >
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                    {header.column.getIsSorted() === "asc" && " ↑"}
-                    {header.column.getIsSorted() === "desc" && " ↓"}
-                  </th>
-                ))}
+                {headerGroup.headers.map((header) => {
+                  const sorted = header.column.getIsSorted();
+                  const sortable = header.column.getCanSort();
+                  const alignRight =
+                    header.column.id === "status" ||
+                    header.column.id === "amount";
+                  let ariaSort: "ascending" | "descending" | "none" | undefined;
+                  if (sortable) {
+                    if (sorted === "asc") ariaSort = "ascending";
+                    else if (sorted === "desc") ariaSort = "descending";
+                    else ariaSort = "none";
+                  }
+                  return (
+                    <th
+                      key={header.id}
+                      scope="col"
+                      aria-sort={ariaSort}
+                      className={cn(
+                        "px-5 py-4 text-[11px] font-semibold uppercase tracking-wider text-[#74796F]",
+                        alignRight ? "text-right" : "text-left",
+                      )}
+                    >
+                      {sortable ? (
+                        <button
+                          type="button"
+                          className={cn(
+                            "-mx-1 inline-flex min-h-9 w-[calc(100%+0.5rem)] items-center gap-1 rounded-md px-1 py-1 text-left text-[11px] font-semibold uppercase tracking-wider text-[#74796F] transition-colors hover:text-[#1A1D18] focus-visible:ring-2 focus-visible:ring-[#1C5C1C]/30 focus-visible:outline-none",
+                            alignRight && "justify-end",
+                          )}
+                          onClick={header.column.getToggleSortingHandler()}
+                        >
+                          {header.isPlaceholder
+                            ? null
+                            : flexRender(
+                                header.column.columnDef.header,
+                                header.getContext(),
+                              )}
+                          {sorted === "asc" ? " ↑" : null}
+                          {sorted === "desc" ? " ↓" : null}
+                        </button>
+                      ) : (
+                        <>
+                          {header.isPlaceholder
+                            ? null
+                            : flexRender(
+                                header.column.columnDef.header,
+                                header.getContext(),
+                              )}
+                        </>
+                      )}
+                    </th>
+                  );
+                })}
               </tr>
             ))}
           </thead>
@@ -516,18 +549,7 @@ export default function HistoryPage() {
               table.getRowModel().rows.map((row) => (
                 <tr
                   key={row.id}
-                  tabIndex={0}
-                  className="cursor-pointer border-b border-[#F5F6F3] transition-colors last:border-b-0 hover:bg-[#FAFAF8]"
-                  aria-label={`Open disbursement for ${row.original.recipientName}`}
-                  onClick={() =>
-                    router.push(`/disbursements/${row.original.id}`)
-                  }
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") {
-                      e.preventDefault();
-                      router.push(`/disbursements/${row.original.id}`);
-                    }
-                  }}
+                  className="border-b border-[#F5F6F3] transition-colors last:border-b-0 hover:bg-[#FAFAF8]"
                 >
                   {row.getVisibleCells().map((cell) => (
                     <td
