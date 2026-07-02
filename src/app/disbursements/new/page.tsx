@@ -162,6 +162,10 @@ function genRef(): string {
   return "REF-" + Math.random().toString(36).substring(2, 10).toUpperCase();
 }
 
+function genBatchId(): string {
+  return `BATCH-${String(Date.now()).slice(-3)}`;
+}
+
 export default function NewDisbursementPage() {
   const router = useRouter();
   const { recipients, addDisbursement, addDisbursements } = useAppStore();
@@ -222,7 +226,7 @@ export default function NewDisbursementPage() {
       reference: genRef(),
       purpose: data.purpose,
       notes: data.notes ?? "",
-      batchId: `BATCH-${String(Date.now()).slice(-3)}`,
+      batchId: genBatchId(),
       submittedBy: "admin@merchant.ph",
       submittedAt: now,
       processingAt: null,
@@ -269,7 +273,7 @@ export default function NewDisbursementPage() {
     if (!csvResult) return;
 
     const now = new Date();
-    const batchId = `BATCH-${String(Date.now()).slice(-3)}`;
+    const batchId = genBatchId();
 
     const newDisbursements: Disbursement[] = csvResult.valid.map((row) => ({
       id: genId(),

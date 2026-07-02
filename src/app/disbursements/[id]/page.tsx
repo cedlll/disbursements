@@ -19,6 +19,9 @@ export default function DisbursementDetailPage() {
 
   const disbursement = disbursements.find((d) => d.id === params.id);
 
+  const heroRef = useFadeIn<HTMLDivElement>({ y: 14 });
+  const gridRef = useStaggerReveal<HTMLDivElement>({ y: 20, stagger: 0.12, delay: 0.2 });
+
   if (!disbursement) {
     return (
       <AppShell title="Disbursement">
@@ -55,9 +58,6 @@ export default function DisbursementDetailPage() {
     });
     toast.success("Disbursement marked as resolved");
   }
-
-  const heroRef = useFadeIn<HTMLDivElement>({ y: 14 });
-  const gridRef = useStaggerReveal<HTMLDivElement>({ y: 20, stagger: 0.12, delay: 0.2 });
 
   return (
     <AppShell title="Disbursement">
