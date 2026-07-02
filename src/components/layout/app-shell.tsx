@@ -14,17 +14,14 @@ interface AppShellProps {
 }
 
 export function AppShell({ children, title }: Readonly<AppShellProps>) {
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-
-  useEffect(() => {
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
+    if (typeof window === "undefined") return false;
     try {
-      if (localStorage.getItem(SIDEBAR_COLLAPSED_KEY) === "1") {
-        setSidebarCollapsed(true);
-      }
+      return localStorage.getItem(SIDEBAR_COLLAPSED_KEY) === "1";
     } catch {
-      /* ignore */
+      return false;
     }
-  }, []);
+  });
 
   useEffect(() => {
     try {
