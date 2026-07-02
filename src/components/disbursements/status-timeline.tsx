@@ -163,28 +163,28 @@ const stateStyles: Record<
   { dot: string; line: string; label: string; time: string }
 > = {
   completed: {
-    dot: "bg-[#4E8F4E]",
-    line: "w-0.5 bg-[#4E8F4E]",
-    label: "text-[#1A1D18]",
-    time: "text-[#5C6057]",
+    dot: "bg-success",
+    line: "w-0.5 bg-success",
+    label: "text-foreground",
+    time: "text-muted-foreground",
   },
   current: {
-    dot: "bg-[#F96B2F] ring-4 ring-[#F96B2F]/20",
-    line: "w-0.5 border-l-2 border-dashed border-[#D4D9CE]",
-    label: "text-[#1A1D18]",
-    time: "text-[#D4541A]",
+    dot: "bg-primary ring-4 ring-primary/15",
+    line: "w-0.5 border-l-2 border-dashed border-border",
+    label: "text-foreground",
+    time: "text-primary",
   },
   future: {
-    dot: "border-2 border-[#D4D9CE] bg-white",
-    line: "w-0.5 border-l-2 border-dashed border-[#D4D9CE]",
-    label: "text-[#74796F]",
-    time: "text-[#74796F]",
+    dot: "border-2 border-input bg-card",
+    line: "w-0.5 border-l-2 border-dashed border-border",
+    label: "text-muted-foreground",
+    time: "text-muted-foreground",
   },
   failed: {
-    dot: "bg-[#C94A4A]",
-    line: "w-0.5 border-l-2 border-dashed border-[#D4D9CE]",
-    label: "text-[#B33E3E]",
-    time: "text-[#B33E3E]",
+    dot: "bg-danger",
+    line: "w-0.5 border-l-2 border-dashed border-border",
+    label: "text-danger",
+    time: "text-danger",
   },
 };
 
@@ -214,7 +214,7 @@ export function StatusTimeline({ disbursement }: Readonly<StatusTimelineProps>) 
             </div>
 
             <div className={cn("pb-6 -mt-0.5", isLast && "pb-0")}>
-              <p className={cn("text-[15px] font-semibold leading-4", style.label)}>
+              <p className={cn("text-sm font-medium leading-4", style.label)}>
                 {step.label}
               </p>
               {step.timestamp && (
@@ -225,7 +225,7 @@ export function StatusTimeline({ disbursement }: Readonly<StatusTimelineProps>) 
                 </p>
               )}
               {step.state === "failed" && step.failureReason && (
-                <div className="mt-2 rounded-xl border border-[#F5C5C5] bg-[#FCEAEA] px-3 py-2.5 text-[13px] leading-relaxed text-[#7D3535]">
+                <div className="mt-2 rounded-lg border border-danger/25 bg-danger-light/60 px-3 py-2.5 text-pretty text-[13px] leading-relaxed text-foreground/80">
                   {step.failureReason}
                 </div>
               )}

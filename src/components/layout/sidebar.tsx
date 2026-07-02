@@ -48,12 +48,12 @@ function BrandMark({ className }: Readonly<{ className?: string }>) {
   return (
     <span
       className={cn(
-        "inline-flex shrink-0 items-center justify-center rounded-[10px] border border-sidebar-border bg-sidebar-accent text-emerald-400/90",
+        "inline-flex shrink-0 items-center justify-center rounded-lg border border-sidebar-border bg-sidebar-accent text-sidebar-primary",
         className,
       )}
       aria-hidden
     >
-      <Banknote className="size-[19px]" strokeWidth={2.2} />
+      <Banknote className="size-[18px]" strokeWidth={1.9} />
     </span>
   );
 }
@@ -74,22 +74,22 @@ function NavLink({
   const active = isNavActive(pathname ?? "", href);
 
   const linkClass = cn(
-    "flex items-center rounded-xl py-2.5 text-[13px] font-medium transition-colors outline-none ring-emerald-500/40 focus-visible:ring-2",
+    "flex items-center rounded-lg py-2.5 text-[13px] font-medium transition-colors outline-none ring-sidebar-ring/50 focus-visible:ring-2",
     collapsed
       ? "justify-center px-2"
       : "gap-3 px-3",
     active
-      ? "bg-white/[0.08] text-white"
-      : "text-slate-400 hover:bg-white/[0.05] hover:text-slate-200",
+      ? "bg-sidebar-accent text-sidebar-accent-foreground"
+      : "text-sidebar-foreground/60 hover:bg-sidebar-accent/60 hover:text-sidebar-foreground",
   );
 
   const icon = (
     <Icon
       className={cn(
-        "size-[18px] shrink-0",
-        active ? "text-emerald-400" : "text-slate-500",
+        "size-[17px] shrink-0",
+        active ? "text-sidebar-primary" : "text-sidebar-foreground/45",
       )}
-      strokeWidth={active ? 2.25 : 1.75}
+      strokeWidth={active ? 2 : 1.75}
       aria-hidden
     />
   );
@@ -148,7 +148,7 @@ export function Sidebar({
               render={
                 <Link
                   href="/dashboard"
-                  className="flex shrink-0 items-center justify-center rounded-xl outline-none ring-emerald-500/40 transition-colors focus-visible:ring-2"
+                  className="flex shrink-0 items-center justify-center rounded-lg outline-none ring-sidebar-ring/50 transition-colors focus-visible:ring-2"
                   aria-label="DisbursePH — Dashboard"
                 />
               }
@@ -162,15 +162,15 @@ export function Sidebar({
         ) : (
           <Link
             href="/dashboard"
-            className="flex min-w-0 flex-1 items-center gap-3 rounded-xl outline-none ring-emerald-500/40 transition-colors focus-visible:ring-2"
+            className="flex min-w-0 flex-1 items-center gap-3 rounded-lg outline-none ring-sidebar-ring/50 transition-colors focus-visible:ring-2"
             title="DisbursePH — Dashboard"
           >
             <BrandMark className="size-9 shrink-0" />
             <div className="min-w-0">
-              <p className="truncate text-[15px] font-semibold tracking-tight text-white">
+              <p className="font-display truncate text-[17px] font-medium text-sidebar-accent-foreground">
                 DisbursePH
               </p>
-              <p className="truncate text-[11px] text-slate-500">Merchant</p>
+              <p className="truncate text-[11px] text-sidebar-foreground/50">Merchant</p>
             </div>
           </Link>
         )}
@@ -178,7 +178,7 @@ export function Sidebar({
           type="button"
           onClick={onToggleCollapsed}
           className={cn(
-            "flex size-9 shrink-0 items-center justify-center rounded-lg text-slate-400 transition-colors hover:bg-white/[0.06] hover:text-white",
+            "flex size-9 shrink-0 items-center justify-center rounded-lg text-sidebar-foreground/60 transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
             collapsed ? "mt-1" : "ml-auto",
           )}
           aria-expanded={!collapsed}
@@ -202,7 +202,7 @@ export function Sidebar({
         <div>
           <p
             className={cn(
-              "mb-2 px-3 text-[10px] font-semibold uppercase tracking-widest text-slate-500",
+              "mb-2 px-3 text-[10px] font-medium uppercase tracking-widest text-sidebar-foreground/40",
               collapsed && "sr-only",
             )}
           >
@@ -222,7 +222,7 @@ export function Sidebar({
         <div>
           <p
             className={cn(
-              "mb-2 px-3 text-[10px] font-semibold uppercase tracking-widest text-slate-500",
+              "mb-2 px-3 text-[10px] font-medium uppercase tracking-widest text-sidebar-foreground/40",
               collapsed && "sr-only",
             )}
           >
@@ -241,7 +241,7 @@ export function Sidebar({
         </div>
       </nav>
 
-      <div className="mt-4 border-t border-white/10 pt-4">
+      <div className="mt-4 border-t border-sidebar-border pt-4">
         {collapsed ? (
           <div className="flex flex-col items-center gap-2 px-0 py-1">
             <Tooltip>
@@ -249,7 +249,7 @@ export function Sidebar({
                 render={
                   <Link
                     href="/settings"
-                    className="flex size-10 shrink-0 items-center justify-center rounded-full bg-emerald-500 text-sm font-semibold text-emerald-950 outline-none ring-emerald-500/40 transition-colors hover:bg-emerald-400 focus-visible:ring-2"
+                    className="flex size-10 shrink-0 items-center justify-center rounded-full bg-sidebar-primary text-sm font-semibold text-sidebar-primary-foreground outline-none ring-sidebar-ring/50 transition-colors hover:bg-sidebar-primary/90 focus-visible:ring-2"
                     aria-label="Merchant, admin@merchant.ph — Settings"
                   />
                 }
@@ -269,7 +269,7 @@ export function Sidebar({
                   <button
                     type="button"
                     onClick={() => setLogoutDialogOpen(true)}
-                    className="flex size-9 shrink-0 items-center justify-center rounded-lg text-slate-400 transition-colors hover:bg-white/[0.06] hover:text-white"
+                    className="flex size-9 shrink-0 items-center justify-center rounded-lg text-sidebar-foreground/60 transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
                     aria-label="Log out"
                   />
                 }
@@ -282,23 +282,23 @@ export function Sidebar({
             </Tooltip>
           </div>
         ) : (
-          <div className="group flex items-center gap-2 rounded-xl px-2 py-2 transition-colors hover:bg-white/[0.05]">
+          <div className="group flex items-center gap-2 rounded-xl px-2 py-2 transition-colors hover:bg-sidebar-accent/60">
             <Link
               href="/settings"
-              className="flex min-w-0 flex-1 items-center gap-3 rounded-lg outline-none ring-emerald-500/40 transition-colors focus-visible:ring-2"
+              className="flex min-w-0 flex-1 items-center gap-3 rounded-lg outline-none ring-sidebar-ring/50 transition-colors focus-visible:ring-2"
               aria-label="Settings — Merchant, admin@merchant.ph"
             >
               <div
-                className="flex size-10 shrink-0 items-center justify-center rounded-full bg-emerald-500 text-sm font-semibold text-emerald-950"
+                className="flex size-10 shrink-0 items-center justify-center rounded-full bg-sidebar-primary text-sm font-semibold text-sidebar-primary-foreground"
                 aria-hidden
               >
                 M
               </div>
               <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-semibold text-white">
+                <p className="truncate text-sm font-medium text-sidebar-accent-foreground">
                   Merchant
                 </p>
-                <p className="truncate text-xs text-slate-500">
+                <p className="truncate text-xs text-sidebar-foreground/50">
                   admin@merchant.ph
                 </p>
               </div>
@@ -306,7 +306,7 @@ export function Sidebar({
             <button
               type="button"
               onClick={() => setLogoutDialogOpen(true)}
-              className="flex size-9 shrink-0 items-center justify-center rounded-lg text-slate-400 transition-colors group-hover:text-slate-300 hover:bg-white/[0.08] hover:text-white"
+              className="flex size-9 shrink-0 items-center justify-center rounded-lg text-sidebar-foreground/60 transition-colors group-hover:text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
               aria-label="Log out"
               title="Log out"
             >

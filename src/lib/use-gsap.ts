@@ -3,6 +3,13 @@
 import { useRef, useEffect } from "react";
 import gsap from "gsap";
 
+function prefersReducedMotion(): boolean {
+  return (
+    typeof window !== "undefined" &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  );
+}
+
 export function useStaggerReveal<T extends HTMLElement>(
   options: {
     y?: number;
@@ -20,19 +27,20 @@ export function useStaggerReveal<T extends HTMLElement>(
 
     const children = el.children;
     if (children.length === 0) return;
+    if (prefersReducedMotion()) return;
 
     gsap.fromTo(
       children,
       {
         opacity: 0,
-        y: options.y ?? 16,
+        y: options.y ?? 12,
       },
       {
         opacity: 1,
         y: 0,
-        duration: options.duration ?? 0.5,
-        stagger: options.stagger ?? 0.08,
-        delay: options.delay ?? 0.1,
+        duration: options.duration ?? 0.3,
+        stagger: options.stagger ?? 0.05,
+        delay: options.delay ?? 0.05,
         ease: options.ease ?? "power2.out",
       }
     );
@@ -53,14 +61,15 @@ export function useFadeIn<T extends HTMLElement>(
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
+    if (prefersReducedMotion()) return;
 
     gsap.fromTo(
       el,
-      { opacity: 0, y: options.y ?? 12 },
+      { opacity: 0, y: options.y ?? 10 },
       {
         opacity: 1,
         y: 0,
-        duration: options.duration ?? 0.5,
+        duration: options.duration ?? 0.3,
         delay: options.delay ?? 0,
         ease: "power2.out",
       }
@@ -79,16 +88,16 @@ export function useTableReveal<T extends HTMLElement>() {
 
     const rows = el.querySelectorAll("tbody tr");
     if (rows.length === 0) return;
+    if (prefersReducedMotion()) return;
 
     gsap.fromTo(
       rows,
-      { opacity: 0, x: -8 },
+      { opacity: 0 },
       {
         opacity: 1,
-        x: 0,
-        duration: 0.35,
-        stagger: 0.04,
-        delay: 0.3,
+        duration: 0.25,
+        stagger: 0.03,
+        delay: 0.15,
         ease: "power2.out",
       }
     );

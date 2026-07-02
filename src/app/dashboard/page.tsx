@@ -1,12 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import type { ReactNode } from "react";
 import {
-  ArrowUpRight,
-  Wallet,
-  Clock,
-  AlertCircle,
   TrendingUp,
   TrendingDown,
   ChevronLeft,
@@ -33,7 +28,7 @@ import {
   MOCK_NOW,
 } from "@/lib/mock-data";
 import { formatPHP } from "@/lib/constants";
-import { useStaggerReveal, useTableReveal } from "@/lib/use-gsap";
+import { useFadeIn, useTableReveal } from "@/lib/use-gsap";
 import type { Disbursement } from "@/lib/mock-data";
 
 const RECENT_PAGE_SIZE = 10;
@@ -44,8 +39,6 @@ interface StatCardProps {
   change: string;
   changeType: "positive" | "negative" | "neutral";
   subtitle: string;
-  icon: ReactNode;
-  iconWellClass: string;
 }
 
 function StatCard({
@@ -54,15 +47,12 @@ function StatCard({
   change,
   changeType,
   subtitle,
-  icon,
-  iconWellClass,
 }: Readonly<StatCardProps>) {
-  let changeBg =
-    "bg-primary/12 text-primary ring-1 ring-primary/15";
+  let changeClass = "text-success";
   if (changeType === "negative") {
-    changeBg = "bg-destructive/10 text-destructive ring-1 ring-destructive/15";
+    changeClass = "text-danger";
   } else if (changeType === "neutral") {
-    changeBg = "bg-muted text-muted-foreground ring-1 ring-border/80";
+    changeClass = "text-muted-foreground";
   }
 
   let TrendIcon: typeof TrendingUp | typeof TrendingDown | null = TrendingUp;
@@ -73,37 +63,28 @@ function StatCard({
   }
 
   return (
-    <div className="@container flex min-h-0 min-w-0 flex-col justify-between rounded-2xl border border-border bg-card p-4 shadow-card sm:p-5 md:p-6">
-      <div className="flex min-w-0 items-start justify-between gap-3">
-        <p className="min-w-0 flex-1 text-[10px] font-semibold uppercase leading-tight tracking-wider text-muted-foreground sm:text-[11px]">
-          {label}
-        </p>
-        <span
-          className={`flex size-8 shrink-0 items-center justify-center rounded-xl sm:size-9 ${iconWellClass}`}
-          aria-hidden
-        >
-          {icon}
-        </span>
-      </div>
+    <div className="@container flex min-h-0 min-w-0 flex-col bg-card p-4 sm:p-5 md:p-6">
+      <p className="min-w-0 text-[13px] leading-tight text-muted-foreground">
+        {label}
+      </p>
 
-      <div className="mt-3 min-w-0 sm:mt-4">
+      <div className="mt-2.5 min-w-0 sm:mt-3">
         <div className="min-w-0 max-w-full overflow-x-auto overscroll-x-contain [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-          <p className="inline-block min-w-0 whitespace-nowrap font-mono text-xs font-bold leading-none tracking-tight text-foreground tabular-nums @min-[10.5rem]:text-sm @min-[13.5rem]:text-base @min-[17rem]:text-lg @min-[21rem]:text-xl">
+          <p className="font-display display-nums inline-block min-w-0 whitespace-nowrap text-lg font-medium leading-none text-foreground @min-[11rem]:text-xl @min-[14rem]:text-2xl @min-[17rem]:text-[27px]">
             {value}
           </p>
         </div>
-        <span
-          className={`mt-2 inline-flex max-w-full items-center gap-0.5 rounded-full px-2 py-0.5 text-[10px] font-semibold leading-tight sm:max-w-[11rem] sm:text-[11px] ${changeBg}`}
-        >
-          {TrendIcon ? (
-            <TrendIcon className="size-3 shrink-0" aria-hidden />
-          ) : null}
-          <span className="min-w-0 whitespace-normal text-pretty break-words text-left">
+        <p className="mt-2.5 flex min-w-0 flex-wrap items-baseline gap-x-1.5 gap-y-0.5 text-xs leading-snug text-muted-foreground sm:mt-3">
+          <span
+            className={`inline-flex items-center gap-1 font-medium ${changeClass}`}
+          >
+            {TrendIcon ? (
+              <TrendIcon className="size-3 shrink-0" aria-hidden />
+            ) : null}
             {change}
           </span>
-        </span>
-        <p className="mt-2 min-w-0 text-pretty text-[11px] leading-snug text-muted-foreground sm:mt-2.5 sm:text-xs sm:leading-relaxed">
-          {subtitle}
+          <span aria-hidden>·</span>
+          <span className="min-w-0 text-pretty">{subtitle}</span>
         </p>
       </div>
     </div>
@@ -165,7 +146,7 @@ export default function DashboardPage() {
     setRecentPage(0);
   }, [activityQuery]);
 
-  const cardsRef = useStaggerReveal<HTMLDivElement>({ y: 20, stagger: 0.1 });
+  const cardsRef = useFadeIn<HTMLDivElement>({ y: 10 });
   const tableRef = useTableReveal<HTMLDivElement>();
 
   const disbursedCoverage = formatUtcMonthToDateThrough(MOCK_NOW);
@@ -189,15 +170,16 @@ export default function DashboardPage() {
   return (
     <AppShell title="Dashboard">
       <div className="flex flex-col gap-6 sm:gap-8 lg:gap-10">
-        <div ref={cardsRef} className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+        <div
+          ref={cardsRef}
+          className="grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-border bg-border shadow-card lg:grid-cols-4"
+        >
           <StatCard
             label="Disbursed"
             value={formatPHP(monthlyTotal)}
             change="10.5%"
             changeType="positive"
             subtitle={disbursedCoverage}
-            iconWellClass="bg-primary/10 text-primary"
-            icon={<ArrowUpRight className="size-[18px]" />}
           />
           <StatCard
             label="Available"
@@ -205,8 +187,6 @@ export default function DashboardPage() {
             change="13.5%"
             changeType="positive"
             subtitle={snapshotCoverage}
-            iconWellClass="bg-primary/10 text-primary"
-            icon={<Wallet className="size-[18px]" />}
           />
           <StatCard
             label="In transit"
@@ -214,8 +194,6 @@ export default function DashboardPage() {
             change={`${pending.count} payout${pending.count === 1 ? "" : "s"}`}
             changeType="neutral"
             subtitle={snapshotCoverage}
-            iconWellClass="bg-muted text-muted-foreground"
-            icon={<Clock className="size-[18px]" />}
           />
           <StatCard
             label="Failed"
@@ -223,16 +201,10 @@ export default function DashboardPage() {
             change={failedCaption}
             changeType={failed.count > 0 ? "negative" : "positive"}
             subtitle={snapshotCoverage}
-            iconWellClass={
-              failed.count > 0
-                ? "bg-destructive/10 text-destructive"
-                : "bg-primary/10 text-primary"
-            }
-            icon={<AlertCircle className="size-[18px]" />}
           />
         </div>
 
-        <section className="overflow-hidden rounded-2xl border border-border bg-card shadow-card">
+        <section className="overflow-hidden rounded-xl border border-border bg-card shadow-card">
           <div className="flex flex-col gap-3 border-b border-border px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-5">
             <div>
               <h2 className="text-sm font-semibold text-foreground">
@@ -248,7 +220,7 @@ export default function DashboardPage() {
                 value={activityQuery}
                 onChange={(e) => setActivityQuery(e.currentTarget.value)}
                 placeholder="Search recipients…"
-                className="h-9 rounded-xl border-border bg-background pl-9"
+                className="h-9 rounded-lg border-border bg-background pl-9"
                 aria-label="Search recent activity"
               />
             </div>
@@ -256,20 +228,20 @@ export default function DashboardPage() {
           <div ref={tableRef} className="overflow-x-auto">
             <table className="w-full min-w-[36rem]">
               <thead>
-                <tr className="border-b border-border bg-muted/30">
-                  <th className="px-5 py-3.5 text-left text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+                <tr className="border-b border-border">
+                  <th className="px-5 py-3.5 text-left text-xs font-medium text-muted-foreground">
                     Recipient
                   </th>
-                  <th className="hidden px-5 py-3.5 text-left text-[11px] font-semibold uppercase tracking-wider text-muted-foreground sm:table-cell">
+                  <th className="hidden px-5 py-3.5 text-left text-xs font-medium text-muted-foreground sm:table-cell">
                     Submitted (UTC)
                   </th>
-                  <th className="hidden px-5 py-3.5 text-left text-[11px] font-semibold uppercase tracking-wider text-muted-foreground md:table-cell">
+                  <th className="hidden px-5 py-3.5 text-left text-xs font-medium text-muted-foreground md:table-cell">
                     Est. done (UTC)
                   </th>
-                  <th className="px-5 py-3.5 text-right text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+                  <th className="px-5 py-3.5 text-right text-xs font-medium text-muted-foreground">
                     Amount
                   </th>
-                  <th className="px-5 py-3.5 text-right text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+                  <th className="px-5 py-3.5 text-right text-xs font-medium text-muted-foreground">
                     Status
                   </th>
                 </tr>
@@ -308,7 +280,7 @@ export default function DashboardPage() {
                       <td className="hidden px-5 py-3.5 text-sm text-muted-foreground md:table-cell">
                         {formatUtcShortDateTime(d.estimatedCompletion)}
                       </td>
-                      <td className="px-5 py-3.5 text-right font-mono text-sm font-semibold tabular-nums text-foreground">
+                      <td className="px-5 py-3.5 text-right text-sm font-medium tabular-nums text-foreground">
                         {formatPHP(d.amount)}
                       </td>
                       <td className="px-5 py-3.5 text-right">
@@ -334,7 +306,7 @@ export default function DashboardPage() {
                   size="sm"
                   disabled={recentPageSafe <= 0}
                   onClick={() => setRecentPage((p) => Math.max(0, p - 1))}
-                  className="rounded-xl border-border text-muted-foreground hover:bg-muted disabled:opacity-30"
+                  className="text-muted-foreground disabled:opacity-40"
                 >
                   <ChevronLeft className="mr-1 h-3.5 w-3.5" />
                   Prev
@@ -352,7 +324,7 @@ export default function DashboardPage() {
                       Math.min(recentPageCount - 1, p + 1),
                     )
                   }
-                  className="rounded-xl border-border text-muted-foreground hover:bg-muted disabled:opacity-30"
+                  className="text-muted-foreground disabled:opacity-40"
                 >
                   Next
                   <ChevronRight className="ml-1 h-3.5 w-3.5" />

@@ -92,10 +92,10 @@ export default function SchedulePage() {
   return (
     <AppShell title="Schedule">
       <div ref={sectionsRef} className="flex flex-col gap-5 sm:gap-6">
-        <Card className="rounded-2xl border-border shadow-none ring-0">
+        <Card className="rounded-xl border border-border bg-card shadow-card ring-0">
           <CardHeader className="border-b border-border pb-4">
             <div className="flex items-start gap-3">
-              <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-secondary">
+              <span className="flex size-10 shrink-0 items-center justify-center rounded-lg border border-border bg-card">
                 <CalendarClock
                   className="size-5 text-primary"
                   aria-hidden
@@ -148,15 +148,15 @@ export default function SchedulePage() {
             const isSelected = selected === opt.value;
 
             const optionStyle = isSelected
-              ? "border-primary bg-primary/[0.03] shadow-card"
-              : "border-border bg-card hover:border-primary/30 hover:shadow-card";
+              ? "border-primary/60 bg-primary/[0.04]"
+              : "border-border bg-card hover:border-input";
 
             const rowId = `schedule-${opt.value}`;
             return (
               <div key={opt.value}>
                 <label
                   htmlFor={rowId}
-                  className={`flex w-full cursor-pointer items-start gap-4 rounded-2xl border p-5 text-left transition-all sm:p-6 ${optionStyle}`}
+                  className={`flex w-full cursor-pointer items-start gap-4 rounded-xl border p-5 text-left transition-colors sm:p-6 ${optionStyle}`}
                 >
                   <div className="pt-0.5">
                     <RadioGroupItem value={opt.value} id={rowId} />
@@ -184,7 +184,7 @@ export default function SchedulePage() {
           <Button
             disabled={!hasChanges}
             onClick={() => setConfirmOpen(true)}
-            className="h-11 rounded-xl bg-primary px-6 text-primary-foreground hover:bg-primary/90 disabled:opacity-40 transition-colors"
+            className="h-11 rounded-lg bg-primary px-6 text-primary-foreground hover:bg-primary/90 disabled:opacity-40 transition-colors"
           >
             Save
           </Button>
@@ -192,7 +192,7 @@ export default function SchedulePage() {
       </div>
 
       <Dialog open={confirmOpen} onOpenChange={setConfirmOpen}>
-        <DialogContent className="gap-4 rounded-2xl bg-white p-5 pr-11 shadow-modal sm:max-w-sm sm:gap-4 sm:pr-12">
+        <DialogContent className="gap-4 rounded-xl p-5 pr-11 shadow-modal sm:max-w-sm sm:gap-4 sm:pr-12">
           <DialogHeader>
             <DialogTitle className="font-semibold text-foreground">
               Confirm Schedule Change
@@ -213,13 +213,13 @@ export default function SchedulePage() {
             <Button
               variant="outline"
               onClick={() => setConfirmOpen(false)}
-              className="rounded-xl bg-secondary text-secondary-foreground hover:bg-muted"
+              className="bg-secondary text-secondary-foreground hover:bg-muted"
             >
               Cancel
             </Button>
             <Button
               onClick={handleConfirm}
-              className="rounded-xl bg-primary text-primary-foreground hover:bg-primary/90"
+              className="bg-primary text-primary-foreground hover:bg-primary/90"
             >
               Confirm
             </Button>

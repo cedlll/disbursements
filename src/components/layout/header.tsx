@@ -126,7 +126,7 @@ export function Header({ title }: Readonly<HeaderProps>) {
   return (
     <header className="header-scroll-backdrop sticky top-0 z-10 flex min-h-14 items-center justify-between gap-4 border-b border-border bg-background/90 px-4 py-3 sm:min-h-16 sm:px-6 lg:px-8">
       <div className="min-w-0 flex-1">
-        <h1 className="truncate text-lg font-semibold tracking-tight text-foreground sm:text-xl">
+        <h1 className="font-display truncate text-balance text-xl font-medium text-foreground sm:text-[22px]">
           {title}
         </h1>
       </div>
@@ -199,11 +199,14 @@ export function Header({ title }: Readonly<HeaderProps>) {
         </div>
 
         <section
-          className="hidden items-center rounded-full border border-border bg-card px-3.5 py-1.5 shadow-card sm:flex"
+          className="hidden flex-col items-end border-r border-border pr-3 leading-tight sm:flex sm:pr-4"
           aria-label="Available for disbursement"
           title="Available for disbursement"
         >
-          <span className="font-mono text-xs font-semibold tabular-nums text-foreground md:text-[13px]">
+          <span className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
+            Available
+          </span>
+          <span className="text-[13px] font-semibold tabular-nums text-foreground">
             {formatPHP(balance.available)}
           </span>
         </section>
@@ -212,7 +215,7 @@ export function Header({ title }: Readonly<HeaderProps>) {
           <button
             type="button"
             onClick={() => setOpen((prev) => !prev)}
-            className="relative flex size-10 items-center justify-center rounded-xl text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+            className="relative flex size-10 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
             aria-label={
               unreadCount > 0
                 ? `Notifications, ${unreadCount} unread`
@@ -229,7 +232,7 @@ export function Header({ title }: Readonly<HeaderProps>) {
           </button>
 
           {open && (
-            <div className="absolute right-0 z-50 mt-3 w-[min(100vw-2rem,22rem)] overflow-hidden rounded-2xl border border-border bg-popover shadow-modal sm:w-96">
+            <div className="absolute right-0 z-40 mt-3 w-[min(100vw-2rem,22rem)] overflow-hidden rounded-xl border border-border bg-popover shadow-modal sm:w-96">
               <div className="flex items-start justify-between gap-4 border-b border-border px-5 py-5 sm:px-6 sm:py-5">
                 <span className="pt-0.5 text-sm font-semibold leading-tight text-foreground">
                   Notifications
@@ -238,7 +241,7 @@ export function Header({ title }: Readonly<HeaderProps>) {
                   <button
                     type="button"
                     onClick={() => markAllNotificationsRead()}
-                    className="flex shrink-0 items-center gap-2 rounded-xl px-3 py-2 text-xs font-medium text-primary underline-offset-2 transition-colors hover:bg-primary/10 hover:underline"
+                    className="flex shrink-0 items-center gap-2 rounded-md px-3 py-2 text-xs font-medium text-primary underline-offset-2 transition-colors hover:bg-primary/10 hover:underline"
                   >
                     <CheckCheck className="size-4 shrink-0" />
                     Mark all read
@@ -265,7 +268,7 @@ export function Header({ title }: Readonly<HeaderProps>) {
                             onClick={() => {
                               if (!n.read) markNotificationRead(n.id);
                             }}
-                            className={`w-full rounded-2xl px-5 py-4 text-left transition-colors hover:bg-muted sm:py-5 ${
+                            className={`w-full rounded-lg px-5 py-4 text-left transition-colors hover:bg-muted sm:py-5 ${
                               n.read ? "" : "bg-muted/60"
                             }`}
                           >
