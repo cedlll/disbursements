@@ -603,21 +603,21 @@ export default function NewDisbursementPage() {
                   <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
                     <div className="rounded-lg border border-border/60 bg-background p-4">
                       <p className="text-xs text-muted-foreground">Rows</p>
-                      <p className="font-display display-nums mt-1 text-xl font-medium text-foreground">{csvResult.totalRows}</p>
+                      <p className="font-display display-nums mt-1 text-xl font-semibold text-foreground">{csvResult.totalRows}</p>
                     </div>
                     <div className="rounded-lg border border-border/60 bg-background p-4">
                       <p className="text-xs text-muted-foreground">Valid</p>
-                      <p className="font-display display-nums mt-1 text-xl font-medium text-success">
+                      <p className="font-display display-nums mt-1 text-xl font-semibold text-success">
                         {csvResult.valid.length}
                       </p>
                     </div>
                     <div className="rounded-lg border border-border/60 bg-background p-4">
                       <p className="text-xs text-muted-foreground">Invalid</p>
-                      <p className="font-display display-nums mt-1 text-xl font-medium text-danger">{csvResult.invalid.length}</p>
+                      <p className="font-display display-nums mt-1 text-xl font-semibold text-danger">{csvResult.invalid.length}</p>
                     </div>
                     <div className="rounded-lg border border-border/60 bg-background p-4">
                       <p className="text-xs text-muted-foreground">Total</p>
-                      <p className="font-display display-nums mt-1 text-xl font-medium text-foreground">
+                      <p className="font-display display-nums mt-1 text-xl font-semibold text-foreground">
                         {formatPHP(csvResult.totalAmount)}
                       </p>
                     </div>

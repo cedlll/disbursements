@@ -74,7 +74,7 @@ export default function DisbursementDetailPage() {
           <h2 className="min-w-0 text-balance text-lg font-medium text-foreground sm:text-xl">
             {disbursement.recipientName}
           </h2>
-          <p className="font-display display-nums text-3xl font-medium text-foreground sm:text-4xl">
+          <p className="font-display display-nums text-3xl font-semibold text-foreground sm:text-4xl">
             {formatPHP(disbursement.amount)}
           </p>
           <StatusBadge status={disbursement.status} size="md" />

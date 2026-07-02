@@ -61,7 +61,7 @@ export function DisbursementDrawer({
             <SheetTitle className="min-w-0 truncate text-lg font-medium text-foreground">
               {disbursement.recipientName}
             </SheetTitle>
-            <p className="font-display display-nums text-[28px] font-medium leading-tight text-foreground">
+            <p className="font-display display-nums text-[28px] font-semibold leading-tight text-foreground">
               {formatPHP(disbursement.amount)}
             </p>
             <StatusBadge status={disbursement.status} size="md" />

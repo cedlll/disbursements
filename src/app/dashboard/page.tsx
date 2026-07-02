@@ -70,7 +70,7 @@ function StatCard({
 
       <div className="mt-2.5 min-w-0 sm:mt-3">
         <div className="min-w-0 max-w-full overflow-x-auto overscroll-x-contain [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-          <p className="font-display display-nums inline-block min-w-0 whitespace-nowrap text-lg font-medium leading-none text-foreground @min-[11rem]:text-xl @min-[14rem]:text-2xl @min-[17rem]:text-[27px]">
+          <p className="font-display display-nums inline-block min-w-0 whitespace-nowrap text-lg font-semibold leading-none text-foreground @min-[11rem]:text-xl @min-[14rem]:text-2xl @min-[17rem]:text-[26px]">
             {value}
           </p>
         </div>

@@ -126,7 +126,7 @@ export function Header({ title }: Readonly<HeaderProps>) {
   return (
     <header className="header-scroll-backdrop sticky top-0 z-10 flex min-h-14 items-center justify-between gap-4 border-b border-border bg-background/90 px-4 py-3 sm:min-h-16 sm:px-6 lg:px-8">
       <div className="min-w-0 flex-1">
-        <h1 className="font-display truncate text-balance text-xl font-medium text-foreground sm:text-[22px]">
+        <h1 className="font-display truncate text-balance text-xl font-semibold text-foreground sm:text-[22px]">
           {title}
         </h1>
       </div>

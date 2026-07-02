@@ -10,7 +10,7 @@
   --font-sans: var(--font-hanken), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-dm-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
   --font-heading: var(--font-hanken), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-newsreader), ui-serif, Georgia, serif;
+  --font-display: var(--font-hanken), ui-sans-serif, system-ui, sans-serif;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -123,7 +123,7 @@
     font-feature-settings: "tnum", "lnum";
     font-variant-numeric: tabular-nums lining-nums;
   }
-  /* Newsreader defaults to old-style proportional figures; money wants lining. */
+  /* Money and metric figures: lining, tabular for vertical alignment in tables. */
   .display-nums {
     font-variant-numeric: lining-nums tabular-nums;
   }

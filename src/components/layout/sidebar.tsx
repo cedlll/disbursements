@@ -167,7 +167,7 @@ export function Sidebar({
           >
             <BrandMark className="size-9 shrink-0" />
             <div className="min-w-0">
-              <p className="font-display truncate text-[17px] font-medium text-sidebar-accent-foreground">
+              <p className="font-display truncate text-base font-semibold text-sidebar-accent-foreground">
                 DisbursePH
               </p>
               <p className="truncate text-[11px] text-sidebar-foreground/50">Merchant</p>
