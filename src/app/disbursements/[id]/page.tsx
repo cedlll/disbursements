@@ -26,17 +26,17 @@ export default function DisbursementDetailPage() {
     return (
       <AppShell title="Disbursement">
         <div className="flex flex-col items-center justify-center py-24 text-center">
-          <div className="max-w-md rounded-2xl bg-white p-8 shadow-card">
-            <p className="text-lg font-medium text-[#1A1D18]">
+          <div className="max-w-md rounded-xl border border-border bg-card p-8 shadow-card">
+            <p className="text-lg font-medium text-foreground">
               Disbursement not found
             </p>
-            <p className="mt-2 text-sm text-[#74796F]">
+            <p className="mt-2 text-sm text-muted-foreground">
               The disbursement you&apos;re looking for doesn&apos;t exist or has
               been removed.
             </p>
             <Button
               variant="outline"
-              className="mt-6 rounded-xl"
+              className="mt-6"
               render={<Link href="/dashboard" />}
             >
               <ArrowLeft className="size-4" aria-hidden />
@@ -64,17 +64,17 @@ export default function DisbursementDetailPage() {
       <div ref={heroRef} className="mb-8 space-y-6">
         <Link
           href="/dashboard"
-          className="inline-flex items-center gap-2 text-sm font-medium text-[#74796F] transition-colors hover:text-[#1A1D18]"
+          className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
         >
           <ArrowLeft className="size-4 shrink-0" aria-hidden />
           Back
         </Link>
 
         <div className="min-w-0 space-y-2">
-          <h2 className="min-w-0 text-lg font-semibold text-[#1A1D18] sm:text-xl">
+          <h2 className="min-w-0 text-balance text-lg font-medium text-foreground sm:text-xl">
             {disbursement.recipientName}
           </h2>
-          <p className="font-mono text-2xl font-bold tabular-nums text-[#1A1D18] sm:text-3xl">
+          <p className="font-display display-nums text-3xl font-semibold text-foreground sm:text-4xl">
             {formatPHP(disbursement.amount)}
           </p>
           <StatusBadge status={disbursement.status} size="md" />
@@ -82,12 +82,12 @@ export default function DisbursementDetailPage() {
       </div>
 
       {disbursement.status === "failed" && (
-        <div className="mb-8 rounded-2xl border border-[#F5C5C5] bg-[#FCEAEA] p-5 sm:p-6">
-          <p className="text-sm font-semibold text-[#B33E3E]">
+        <div className="mb-8 rounded-xl border border-danger/25 bg-danger-light/60 p-5 sm:p-6">
+          <p className="text-sm font-semibold text-danger">
             Couldn&apos;t complete
           </p>
           {disbursement.failureReason && (
-            <p className="mt-2 text-sm leading-relaxed text-[#7D3535]">
+            <p className="mt-2 text-pretty text-sm leading-relaxed text-foreground/80">
               {disbursement.failureReason}
             </p>
           )}
@@ -95,7 +95,6 @@ export default function DisbursementDetailPage() {
             <Button
               variant="outline"
               size="sm"
-              className="rounded-xl"
               render={<Link href="/disbursements/new" />}
             >
               Edit &amp; Retry
@@ -103,7 +102,7 @@ export default function DisbursementDetailPage() {
             <Button
               variant="ghost"
               size="sm"
-              className="text-[#1C5C1C] hover:text-[#1C5C1C]"
+              className="text-primary hover:text-primary"
               onClick={handleMarkResolved}
             >
               Mark as Resolved
@@ -113,15 +112,15 @@ export default function DisbursementDetailPage() {
       )}
 
       <div ref={gridRef} className="grid grid-cols-1 gap-5 lg:grid-cols-3 lg:gap-6">
-        <div className="rounded-2xl bg-white/70 border border-[#E8EAE4]/60 backdrop-blur-sm p-6 shadow-card sm:p-8 lg:col-span-2">
-          <h2 className="mb-6 text-xs font-semibold uppercase tracking-wider text-[#74796F]">
+        <div className="rounded-xl border border-border bg-card p-6 shadow-card sm:p-8 lg:col-span-2">
+          <h2 className="mb-6 text-sm font-semibold text-foreground">
             Timeline
           </h2>
           <StatusTimeline disbursement={disbursement} />
         </div>
 
-        <div className="rounded-2xl bg-white/70 border border-[#E8EAE4]/60 backdrop-blur-sm p-6 shadow-card sm:p-8 lg:col-span-1">
-          <h2 className="mb-5 text-xs font-semibold uppercase tracking-wider text-[#74796F]">
+        <div className="rounded-xl border border-border bg-card p-6 shadow-card sm:p-8 lg:col-span-1">
+          <h2 className="mb-5 text-sm font-semibold text-foreground">
             Details
           </h2>
           <dl className="space-y-5">
@@ -144,8 +143,8 @@ export default function DisbursementDetailPage() {
 function DetailRow({ label, value }: Readonly<{ label: string; value: string }>) {
   return (
     <div>
-      <dt className="text-[11px] font-medium uppercase tracking-wider text-[#74796F]">{label}</dt>
-      <dd className="mt-1 text-sm font-medium text-[#1A1D18]">{value}</dd>
+      <dt className="text-xs text-muted-foreground">{label}</dt>
+      <dd className="mt-1 text-sm font-medium text-foreground">{value}</dd>
     </div>
   );
 }

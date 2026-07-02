@@ -66,19 +66,19 @@ function buildEstimateSteps(
 
 const stateColors = {
   completed: {
-    dot: "h-2.5 w-2.5 shrink-0 rounded-full bg-[#4E8F4E]",
-    text: "text-[#1A1D18]",
-    time: "text-[#5C6057]",
+    dot: "size-2.5 shrink-0 rounded-full bg-success",
+    text: "text-foreground",
+    time: "text-muted-foreground",
   },
   current: {
-    dot: "h-3 w-3 shrink-0 rounded-full bg-[#F96B2F]",
-    text: "text-[#F96B2F]",
-    time: "text-[#F96B2F]",
+    dot: "size-3 shrink-0 rounded-full bg-primary ring-4 ring-primary/15",
+    text: "text-primary",
+    time: "text-primary",
   },
   future: {
-    dot: "h-2.5 w-2.5 shrink-0 rounded-full border-2 border-[#D4D9CE] bg-white",
-    text: "text-[#74796F]",
-    time: "text-[#74796F]",
+    dot: "size-2.5 shrink-0 rounded-full border-2 border-input bg-card",
+    text: "text-muted-foreground",
+    time: "text-muted-foreground",
   },
 };
 
@@ -86,7 +86,7 @@ function StepConnector({ state }: Readonly<{ state: StepState }>) {
   if (state === "completed") {
     return (
       <div
-        className="mx-1.5 h-[2px] min-h-[2px] min-w-[0.75rem] flex-1 self-center rounded-full bg-[#4E8F4E]"
+        className="mx-1.5 h-[2px] min-h-[2px] min-w-[0.75rem] flex-1 self-center rounded-full bg-success"
         aria-hidden
       />
     );
@@ -94,7 +94,7 @@ function StepConnector({ state }: Readonly<{ state: StepState }>) {
 
   return (
     <div
-      className="mx-1.5 h-0 min-w-[0.75rem] flex-1 self-center border-0 border-t-2 border-dashed border-[#D4D9CE]"
+      className="mx-1.5 h-0 min-w-[0.75rem] flex-1 self-center border-0 border-t-2 border-dashed border-border"
       aria-hidden
     />
   );
@@ -131,7 +131,7 @@ export function ProcessingEstimate({
                   {step.label}
                 </span>
                 {step.range && (
-                  <span className="text-[11px] text-[#74796F]">
+                  <span className="text-[11px] text-muted-foreground">
                     {step.range}
                   </span>
                 )}

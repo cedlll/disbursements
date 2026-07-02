@@ -39,54 +39,57 @@ export const STATUS_CONFIG: Record<
 > = {
   queued: {
     label: "Queued",
-    color: "text-[#5C6057]",
-    bgColor: "bg-[#F0F2ED]",
-    dotColor: "bg-[#8A8F85]",
+    color: "text-muted-foreground",
+    bgColor: "bg-muted",
+    dotColor: "bg-muted-foreground/50",
   },
   processing: {
     label: "Processing",
-    color: "text-[#1A52C4]",
-    bgColor: "bg-[#EAF1FF]",
-    dotColor: "bg-[#3B7BF5]",
+    color: "text-info",
+    bgColor: "bg-info-light",
+    dotColor: "bg-info",
   },
   in_transit: {
-    label: "In Transit",
-    color: "text-[#8A6200]",
-    bgColor: "bg-[#FDF3CC]",
-    dotColor: "bg-[#D4A017]",
+    label: "In transit",
+    color: "text-warning",
+    bgColor: "bg-warning-light",
+    dotColor: "bg-warning",
   },
   completed: {
     label: "Completed",
-    color: "text-[#1C5C1C]",
-    bgColor: "bg-[#D6E8D6]",
-    dotColor: "bg-[#4E8F4E]",
+    color: "text-success",
+    bgColor: "bg-success-light",
+    dotColor: "bg-success",
   },
   failed: {
     label: "Failed",
-    color: "text-[#C94A4A]",
-    bgColor: "bg-[#FCEAEA]",
-    dotColor: "bg-[#C94A4A]",
+    color: "text-danger",
+    bgColor: "bg-danger-light",
+    dotColor: "bg-danger",
   },
 };
 
 export const VERIFICATION_CONFIG: Record<
   VerificationStatus,
-  { label: string; color: string; bgColor: string }
+  { label: string; color: string; bgColor: string; dotColor: string }
 > = {
   verified: {
     label: "Verified",
-    color: "text-[#1C5C1C]",
-    bgColor: "bg-[#D6E8D6]",
+    color: "text-success",
+    bgColor: "bg-success-light",
+    dotColor: "bg-success",
   },
   pending: {
     label: "Pending",
-    color: "text-[#C24A12]",
-    bgColor: "bg-[#FFF4EE]",
+    color: "text-warning",
+    bgColor: "bg-warning-light",
+    dotColor: "bg-warning",
   },
   failed: {
     label: "Failed",
-    color: "text-[#C94A4A]",
-    bgColor: "bg-[#FCEAEA]",
+    color: "text-danger",
+    bgColor: "bg-danger-light",
+    dotColor: "bg-danger",
   },
 };
 

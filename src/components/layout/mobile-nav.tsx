@@ -26,7 +26,7 @@ export function MobileNav() {
 
   return (
     <nav
-      className="fixed inset-x-0 bottom-0 z-40 glass-strong pb-[max(0px,env(safe-area-inset-bottom))] border-t border-border/80 shadow-[0_-1px_12px_rgba(15,36,30,0.06)] lg:hidden"
+      className="fixed inset-x-0 bottom-0 z-20 border-t border-border bg-background/95 pb-[max(0px,env(safe-area-inset-bottom))] lg:hidden"
       aria-label="Primary"
     >
       <div className="mx-auto flex h-16 max-w-lg items-stretch justify-around px-2">
@@ -39,7 +39,7 @@ export function MobileNav() {
               href={href}
               className={`flex min-w-0 flex-1 flex-col items-center justify-center gap-0.5 py-2 text-[11px] font-medium transition-colors ${
                 active
-                  ? "text-emerald-600"
+                  ? "text-primary"
                   : "text-muted-foreground active:text-foreground"
               }`}
             >

@@ -55,7 +55,7 @@ const columns = [
   columnHelper.accessor("submittedAt", {
     header: "Submitted (UTC)",
     cell: (info) => (
-      <span className="whitespace-nowrap text-[#1A1D18]">
+      <span className="whitespace-nowrap text-foreground">
         {formatUtcShortDateTime(info.getValue())}
       </span>
     ),
@@ -66,7 +66,7 @@ const columns = [
     cell: (info) => (
       <Link
         href={`/disbursements/${info.row.original.id}`}
-        className="font-medium text-[#1A1D18] hover:underline focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1C5C1C]/30"
+        className="font-medium text-foreground hover:underline focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40"
       >
         {info.getValue()}
       </Link>
@@ -75,7 +75,7 @@ const columns = [
   columnHelper.accessor("bankCode", {
     header: "Bank",
     cell: (info) => (
-      <span className="text-[#74796F]">{getBankName(info.getValue())}</span>
+      <span className="text-muted-foreground">{getBankName(info.getValue())}</span>
     ),
   }),
   columnHelper.accessor("amount", {
@@ -83,7 +83,7 @@ const columns = [
       <span className="block text-right">Amount</span>
     ),
     cell: (info) => (
-      <span className="block font-mono text-sm font-semibold text-right tabular-nums text-[#1A1D18]">
+      <span className="block text-right text-sm font-medium tabular-nums text-foreground">
         {formatPHP(info.getValue())}
       </span>
     ),
@@ -91,7 +91,7 @@ const columns = [
   columnHelper.accessor("reference", {
     header: "Reference",
     cell: (info) => (
-      <span className="font-mono text-xs text-[#74796F]">
+      <span className="font-mono text-xs text-muted-foreground">
         {info.getValue()}
       </span>
     ),
@@ -158,7 +158,7 @@ function HistoryDateFilter({
 
   return (
     <div className="min-w-0">
-      <label htmlFor={id} className="mb-2 block text-xs font-medium text-[#74796F]">
+      <label htmlFor={id} className="mb-2 block text-xs font-medium text-muted-foreground">
         {label}
       </label>
       <Popover open={open} onOpenChange={setOpen}>
@@ -170,13 +170,13 @@ function HistoryDateFilter({
               type="button"
               variant="outline"
               className={cn(
-                "h-10 w-full min-w-0 justify-start rounded-xl border border-[#E8EAE4] bg-white px-3 text-left text-sm font-normal text-[#1A1D18] shadow-none hover:bg-[#F9FAFB] focus-visible:border-[#1C5C1C] focus-visible:ring-2 focus-visible:ring-[#1C5C1C]/10",
-                !value && "text-[#74796F]",
+                "h-10 w-full min-w-0 justify-start rounded-lg border-input bg-card px-3 text-left text-sm font-normal text-foreground shadow-none hover:bg-muted focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/15",
+                !value && "text-muted-foreground",
               )}
             />
           }
         >
-          <CalendarDays className="mr-2 size-4 shrink-0 text-[#74796F]" aria-hidden />
+          <CalendarDays className="mr-2 size-4 shrink-0 text-muted-foreground" aria-hidden />
           {value
             ? format(parse(value, "yyyy-MM-dd", new Date()), "MMM d, yyyy")
             : placeholder}
@@ -204,7 +204,7 @@ function HistoryDateFilter({
                 type="button"
                 variant="ghost"
                 size="sm"
-                className="h-8 text-xs text-[#74796F] hover:text-[#1A1D18]"
+                className="h-8 text-xs text-muted-foreground hover:text-foreground"
                 onClick={() => {
                   onChange("");
                   setOpen(false);
@@ -343,7 +343,7 @@ export default function HistoryPage() {
       <div className="flex flex-col gap-8">
       <div
         ref={filtersRef}
-        className="overflow-hidden rounded-2xl border border-[#E8EAE4]/60 bg-white/50 shadow-sm backdrop-blur-sm"
+        className="overflow-hidden rounded-xl border border-border bg-card shadow-card"
       >
         <div className="grid grid-cols-2 gap-4 p-4 sm:grid-cols-6 sm:gap-x-5 sm:gap-y-4 sm:p-5">
           <div className="min-w-0 sm:col-span-3">
@@ -381,7 +381,7 @@ export default function HistoryPage() {
             />
           </div>
           <div className="col-span-2 min-w-0 sm:col-span-2">
-            <label htmlFor="filter-status" className="mb-2 block text-xs font-medium text-[#74796F]">
+            <label htmlFor="filter-status" className="mb-2 block text-xs font-medium text-muted-foreground">
               Status
             </label>
             <Select
@@ -390,7 +390,7 @@ export default function HistoryPage() {
             >
               <SelectTrigger
                 id="filter-status"
-                className="h-10 w-full rounded-xl border border-[#E8EAE4] bg-white text-[#1A1D18]"
+                className="h-10 w-full rounded-lg border-input bg-card text-foreground"
               >
                 <SelectValue placeholder="All statuses">
                   {(value: string) =>
@@ -398,7 +398,7 @@ export default function HistoryPage() {
                   }
                 </SelectValue>
               </SelectTrigger>
-              <SelectContent className="border border-[#E8EAE4] bg-white">
+              <SelectContent className="border-border bg-popover">
                 {STATUS_OPTIONS.map((opt) => (
                   <SelectItem key={opt.value} value={opt.value}>
                     {opt.label}
@@ -408,7 +408,7 @@ export default function HistoryPage() {
             </Select>
           </div>
           <div className="min-w-0 sm:col-span-2">
-            <label htmlFor="filter-amount-min" className="mb-2 block text-xs font-medium text-[#74796F]">
+            <label htmlFor="filter-amount-min" className="mb-2 block text-xs font-medium text-muted-foreground">
               Min ₱
             </label>
             <Input
@@ -417,11 +417,11 @@ export default function HistoryPage() {
               placeholder="0"
               value={amountMin}
               onChange={(e) => setAmountMin(e.currentTarget.value)}
-              className="h-10 w-full rounded-xl border border-[#E8EAE4] bg-white text-[#1A1D18]"
+              className="h-10 w-full rounded-lg border-input bg-card text-foreground"
             />
           </div>
           <div className="min-w-0 sm:col-span-2">
-            <label htmlFor="filter-amount-max" className="mb-2 block text-xs font-medium text-[#74796F]">
+            <label htmlFor="filter-amount-max" className="mb-2 block text-xs font-medium text-muted-foreground">
               Max ₱
             </label>
             <Input
@@ -430,11 +430,11 @@ export default function HistoryPage() {
               placeholder="∞"
               value={amountMax}
               onChange={(e) => setAmountMax(e.currentTarget.value)}
-              className="h-10 w-full rounded-xl border border-[#E8EAE4] bg-white text-[#1A1D18]"
+              className="h-10 w-full rounded-lg border-input bg-card text-foreground"
             />
           </div>
           <div className="col-span-2 min-w-0 sm:col-span-6">
-            <label htmlFor="filter-recipient" className="mb-2 block text-xs font-medium text-[#74796F]">
+            <label htmlFor="filter-recipient" className="mb-2 block text-xs font-medium text-muted-foreground">
               Recipient
             </label>
             <Input
@@ -442,19 +442,19 @@ export default function HistoryPage() {
               placeholder="Search by name…"
               value={recipientSearch}
               onChange={(e) => setRecipientSearch(e.currentTarget.value)}
-              className="h-10 w-full rounded-xl border border-[#E8EAE4] bg-white text-[#1A1D18] placeholder:text-[#74796F]"
+              className="h-10 w-full rounded-lg border-input bg-card text-foreground placeholder:text-muted-foreground"
             />
           </div>
         </div>
 
-        <div className="flex flex-col gap-3 border-t border-[#E8EAE4]/70 bg-[#F7F8F5]/90 px-4 py-3.5 sm:flex-row sm:items-center sm:justify-between sm:px-5">
+        <div className="flex flex-col gap-3 border-t border-border bg-muted/40 px-4 py-3.5 sm:flex-row sm:items-center sm:justify-between sm:px-5">
           <Button
             type="button"
             variant="ghost"
             size="sm"
             disabled={!hasActiveFilters}
             onClick={clearAllFilters}
-            className="h-9 justify-center gap-2 rounded-lg text-[#5C6158] hover:bg-[#E8EAE4]/80 hover:text-[#1A1D18] disabled:opacity-40 sm:justify-start"
+            className="h-9 justify-center gap-2 rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground disabled:opacity-40 sm:justify-start"
           >
             <FilterX className="size-4 shrink-0" aria-hidden />
             Clear filters
@@ -465,7 +465,7 @@ export default function HistoryPage() {
               variant="outline"
               size="sm"
               onClick={() => exportCSV(filteredData)}
-              className="h-9 gap-2 rounded-lg border-[#D5D8D0] bg-white px-3.5 text-[#1A1D18] hover:bg-[#F9FAFB]"
+              className="h-9 gap-2 rounded-lg border-border bg-card px-3.5 text-foreground hover:bg-muted"
             >
               <Download className="size-4 shrink-0" aria-hidden />
               Export CSV
@@ -474,13 +474,13 @@ export default function HistoryPage() {
         </div>
       </div>
 
-      <div ref={tableRef} className="overflow-x-auto rounded-2xl bg-white/70 border border-[#E8EAE4]/60 backdrop-blur-sm shadow-card">
+      <div ref={tableRef} className="overflow-x-auto rounded-xl border border-border bg-card shadow-card">
         <table className="w-full min-w-[800px]">
           <thead>
             {table.getHeaderGroups().map((headerGroup) => (
               <tr
                 key={headerGroup.id}
-                className="border-b border-[#F5F6F3]"
+                className="border-b border-border/60"
               >
                 {headerGroup.headers.map((header) => {
                   const sorted = header.column.getIsSorted();
@@ -500,7 +500,7 @@ export default function HistoryPage() {
                       scope="col"
                       aria-sort={ariaSort}
                       className={cn(
-                        "px-5 py-4 text-[11px] font-semibold uppercase tracking-wider text-[#74796F]",
+                        "px-5 py-3.5 text-xs font-medium text-muted-foreground",
                         alignRight ? "text-right" : "text-left",
                       )}
                     >
@@ -508,7 +508,7 @@ export default function HistoryPage() {
                         <button
                           type="button"
                           className={cn(
-                            "-mx-1 inline-flex min-h-9 w-[calc(100%+0.5rem)] items-center gap-1 rounded-md px-1 py-1 text-left text-[11px] font-semibold uppercase tracking-wider text-[#74796F] transition-colors hover:text-[#1A1D18] focus-visible:ring-2 focus-visible:ring-[#1C5C1C]/30 focus-visible:outline-none",
+                            "-mx-1 inline-flex min-h-9 w-[calc(100%+0.5rem)] items-center gap-1 rounded-md px-1 py-1 text-left text-xs font-medium text-muted-foreground transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:outline-none",
                             alignRight && "justify-end",
                           )}
                           onClick={header.column.getToggleSortingHandler()}
@@ -543,7 +543,7 @@ export default function HistoryPage() {
               <tr>
                 <td
                   colSpan={columns.length}
-                  className="px-4 py-16 text-center text-sm leading-relaxed text-[#74796F]"
+                  className="px-4 py-16 text-center text-sm leading-relaxed text-muted-foreground"
                 >
                   No transactions match your filters. Try adjusting the date
                   range.
@@ -553,7 +553,7 @@ export default function HistoryPage() {
               table.getRowModel().rows.map((row) => (
                 <tr
                   key={row.id}
-                  className="border-b border-[#F5F6F3] transition-colors last:border-b-0 hover:bg-[#FAFAF8]"
+                  className="border-b border-border/60 transition-colors last:border-b-0 hover:bg-muted/40"
                 >
                   {row.getVisibleCells().map((cell) => (
                     <td
@@ -576,7 +576,7 @@ export default function HistoryPage() {
       </div>
 
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <p className="text-sm text-[#74796F]">
+        <p className="text-sm text-muted-foreground">
           {totalRows === 0
             ? "No rows match your filters."
             : `Showing rows ${startRow}–${endRow} of ${totalRows} (${pageSize} per page)`}
@@ -587,12 +587,12 @@ export default function HistoryPage() {
             size="sm"
             disabled={!table.getCanPreviousPage()}
             onClick={() => table.previousPage()}
-            className="text-[#74796F] hover:bg-[#E8EAE4] disabled:opacity-30"
+            className="text-muted-foreground hover:bg-muted disabled:opacity-30"
           >
             <ChevronLeft className="mr-1 h-3.5 w-3.5" />
             Prev
           </Button>
-          <span className="text-xs tabular-nums text-[#74796F]">
+          <span className="text-xs tabular-nums text-muted-foreground">
             Page {pageIndex + 1} of {table.getPageCount() || 1}
           </span>
           <Button
@@ -600,7 +600,7 @@ export default function HistoryPage() {
             size="sm"
             disabled={!table.getCanNextPage()}
             onClick={() => table.nextPage()}
-            className="text-[#74796F] hover:bg-[#E8EAE4] disabled:opacity-30"
+            className="text-muted-foreground hover:bg-muted disabled:opacity-30"
           >
             Next
             <ChevronRight className="ml-1 h-3.5 w-3.5" />

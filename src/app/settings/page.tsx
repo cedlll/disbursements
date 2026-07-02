@@ -34,9 +34,9 @@ const tierLabel: Record<MerchantTier, string> = {
 };
 
 const tierPillClass: Record<MerchantTier, string> = {
-  standard: "bg-[#F0F2ED] text-[#5C6057] ring-1 ring-[#E8EAE4]/80",
-  verified: "bg-[#D6E8D6] text-[#1C5C1C] ring-1 ring-[#C5DCC2]/60",
-  premium: "bg-[#FDF3CC] text-[#6B5200] ring-1 ring-[#E8D9A8]/80",
+  standard: "text-muted-foreground ring-1 ring-border",
+  verified: "text-success ring-1 ring-success/25",
+  premium: "text-warning ring-1 ring-warning/25",
 };
 
 const INITIAL_NOTIFICATION_PREFS = {
@@ -62,12 +62,12 @@ function SwitchRow({
       <div className="min-w-0">
         <Label
           htmlFor={id}
-          className="cursor-pointer text-sm font-medium text-[#1A1D18]"
+          className="cursor-pointer text-sm font-medium text-foreground"
         >
           {label}
         </Label>
         {description ? (
-          <p className="mt-0.5 text-xs leading-snug text-[#74796F]">
+          <p className="mt-0.5 text-xs leading-snug text-muted-foreground">
             {description}
           </p>
         ) : null}
@@ -116,14 +116,14 @@ export default function SettingsPage() {
   return (
     <AppShell title="Settings">
       <div ref={sectionsRef} className="flex flex-col gap-5 sm:gap-6">
-        <Card className="rounded-2xl border-[#E8EAE4] shadow-none ring-0">
-          <CardHeader className="border-b border-[#F0F2ED] pb-4">
+        <Card className="rounded-xl border border-border bg-card shadow-card ring-0">
+          <CardHeader className="border-b border-border/60 pb-4">
             <div className="flex items-start gap-3">
-              <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-[#F0F2ED]">
-                <Building2 className="size-5 text-[#1C5C1C]" aria-hidden />
+              <span className="flex size-10 shrink-0 items-center justify-center rounded-lg border border-border bg-card">
+                <Building2 className="size-5 text-primary" aria-hidden />
               </span>
               <div className="min-w-0">
-                <CardTitle className="text-[#1A1D18]">Account</CardTitle>
+                <CardTitle className="text-foreground">Account</CardTitle>
                 <CardDescription>
                   Merchant profile and verification tier
                 </CardDescription>
@@ -131,13 +131,13 @@ export default function SettingsPage() {
             </div>
           </CardHeader>
           <CardContent className="pt-3">
-            <dl className="divide-y divide-[#F0F2ED]">
+            <dl className="divide-y divide-border/60">
               <div className="grid grid-cols-1 gap-1.5 py-3.5 first:pt-0 md:grid-cols-[11rem_1fr] md:items-center md:gap-x-6 md:gap-y-0">
-                <dt className="text-xs font-medium text-[#74796F]">
+                <dt className="text-xs font-medium text-muted-foreground">
                   Registered as
                 </dt>
                 <dd className="flex min-w-0 flex-wrap items-center gap-2 md:justify-self-end">
-                  <span className="text-sm font-semibold text-[#1A1D18]">
+                  <span className="text-sm font-semibold text-foreground">
                     Merchant
                   </span>
                   <span
@@ -151,18 +151,18 @@ export default function SettingsPage() {
                 </dd>
               </div>
               <div className="grid grid-cols-1 gap-1 py-3.5 md:grid-cols-[11rem_1fr] md:items-center md:gap-x-6 md:gap-y-0">
-                <dt className="text-xs font-medium text-[#74796F]">
+                <dt className="text-xs font-medium text-muted-foreground">
                   Email
                 </dt>
-                <dd className="min-w-0 truncate text-sm text-[#1A1D18] md:justify-self-end md:text-right">
+                <dd className="min-w-0 truncate text-sm text-foreground md:justify-self-end md:text-right">
                   admin@merchant.ph
                 </dd>
               </div>
               <div className="grid grid-cols-1 gap-1 py-3.5 md:grid-cols-[11rem_1fr] md:items-center md:gap-x-6 md:gap-y-0">
-                <dt className="text-xs font-medium text-[#74796F]">
+                <dt className="text-xs font-medium text-muted-foreground">
                   Available balance
                 </dt>
-                <dd className="min-w-0 font-mono text-sm font-semibold tabular-nums text-[#1A1D18] md:justify-self-end md:text-right">
+                <dd className="min-w-0 text-sm font-semibold tabular-nums text-foreground md:justify-self-end md:text-right">
                   {formatPHP(balance.available)}
                 </dd>
               </div>
@@ -170,14 +170,14 @@ export default function SettingsPage() {
           </CardContent>
         </Card>
 
-        <Card className="rounded-2xl border-[#E8EAE4] shadow-none ring-0">
-          <CardHeader className="border-b border-[#F0F2ED] pb-4">
+        <Card className="rounded-xl border border-border bg-card shadow-card ring-0">
+          <CardHeader className="border-b border-border/60 pb-4">
             <div className="flex items-start gap-3">
-              <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-[#F0F2ED]">
-                <Bell className="size-5 text-[#1C5C1C]" aria-hidden />
+              <span className="flex size-10 shrink-0 items-center justify-center rounded-lg border border-border bg-card">
+                <Bell className="size-5 text-primary" aria-hidden />
               </span>
               <div className="min-w-0">
-                <CardTitle className="text-[#1A1D18]">Notifications</CardTitle>
+                <CardTitle className="text-foreground">Notifications</CardTitle>
                 <CardDescription>
                   Choose how we reach you about payouts and activity
                 </CardDescription>
@@ -185,7 +185,7 @@ export default function SettingsPage() {
             </div>
           </CardHeader>
           <CardContent className="py-4">
-            <div className="divide-y divide-[#F0F2ED]">
+            <div className="divide-y divide-border/60">
               <SwitchRow
                 id="settings-payout-alerts"
                 label="Payout status alerts"
@@ -201,11 +201,11 @@ export default function SettingsPage() {
                 onCheckedChange={setWeeklyDigest}
               />
             </div>
-            <div className="mt-4 flex justify-end border-t border-[#F0F2ED] pt-4">
+            <div className="mt-4 flex justify-end border-t border-border/60 pt-4">
               <Button
                 type="button"
                 onClick={handleSaveNotificationPrefs}
-                className="h-11 rounded-xl bg-[#1C5C1C] px-6 text-white transition-colors hover:bg-[#144A14]"
+                className="h-11 rounded-lg bg-primary px-6 text-primary-foreground transition-colors hover:bg-primary/90"
               >
                 Save preferences
               </Button>
@@ -213,17 +213,17 @@ export default function SettingsPage() {
           </CardContent>
         </Card>
 
-        <Card className="rounded-2xl border-[#E8EAE4] shadow-none ring-0">
-          <CardHeader className="border-b border-[#F0F2ED] pb-4">
+        <Card className="rounded-xl border border-border bg-card shadow-card ring-0">
+          <CardHeader className="border-b border-border/60 pb-4">
             <div className="flex items-start gap-3">
-              <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-[#F0F2ED]">
+              <span className="flex size-10 shrink-0 items-center justify-center rounded-lg border border-border bg-card">
                 <CalendarClock
-                  className="size-5 text-[#1C5C1C]"
+                  className="size-5 text-primary"
                   aria-hidden
                 />
               </span>
               <div className="min-w-0">
-                <CardTitle className="text-[#1A1D18]">Payouts</CardTitle>
+                <CardTitle className="text-foreground">Payouts</CardTitle>
                 <CardDescription>
                   Cadence and next run date live on the schedule screen
                 </CardDescription>
@@ -233,32 +233,32 @@ export default function SettingsPage() {
           <CardContent className="py-4">
             <Link
               href="/schedule"
-              className="flex items-center justify-between gap-3 rounded-xl border border-[#E8EAE4] bg-[#FAFAF8] px-4 py-3.5 text-left transition-colors hover:border-[#C5DCC2] hover:bg-white"
+              className="flex items-center justify-between gap-3 rounded-lg border border-border bg-background px-4 py-3.5 text-left transition-colors hover:border-input hover:bg-card"
             >
               <span className="min-w-0">
-                <span className="block text-sm font-medium text-[#1A1D18]">
+                <span className="block text-sm font-medium text-foreground">
                   Payout schedule
                 </span>
-                <span className="block text-xs text-[#74796F]">
+                <span className="block text-xs text-muted-foreground">
                   Change frequency and view next payout
                 </span>
               </span>
               <ChevronRight
-                className="size-5 shrink-0 text-[#D4D9CE]"
+                className="size-5 shrink-0 text-muted-foreground/50"
                 aria-hidden
               />
             </Link>
           </CardContent>
         </Card>
 
-        <Card className="rounded-2xl border-[#E8EAE4] shadow-none ring-0">
-          <CardHeader className="border-b border-[#F0F2ED] pb-4">
+        <Card className="rounded-xl border border-border bg-card shadow-card ring-0">
+          <CardHeader className="border-b border-border/60 pb-4">
             <div className="flex items-start gap-3">
-              <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-[#F0F2ED]">
-                <Shield className="size-5 text-[#1C5C1C]" aria-hidden />
+              <span className="flex size-10 shrink-0 items-center justify-center rounded-lg border border-border bg-card">
+                <Shield className="size-5 text-primary" aria-hidden />
               </span>
               <div className="min-w-0">
-                <CardTitle className="text-[#1A1D18]">Security</CardTitle>
+                <CardTitle className="text-foreground">Security</CardTitle>
                 <CardDescription>
                   Sign-in and session controls (coming soon)
                 </CardDescription>
@@ -266,7 +266,7 @@ export default function SettingsPage() {
             </div>
           </CardHeader>
           <CardContent className="py-4">
-            <p className="text-sm text-[#74796F]">
+            <p className="text-sm text-muted-foreground">
               Password changes and two-factor authentication will appear here in
               a future release.
             </p>

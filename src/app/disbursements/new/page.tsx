@@ -307,11 +307,11 @@ export default function NewDisbursementPage() {
     <AppShell title="New disbursement">
       <div ref={formRef} className="mx-auto max-w-3xl space-y-8">
         <Tabs defaultValue="single">
-          <TabsList className="mb-8 w-full justify-start gap-1 rounded-xl bg-secondary p-1 sm:w-auto">
-            <TabsTrigger value="single" className="rounded-[10px] px-5 py-2 text-sm font-medium">
+          <TabsList className="mb-8 w-full justify-start gap-1 rounded-lg bg-secondary p-1 sm:w-auto">
+            <TabsTrigger value="single" className="rounded-md px-5 py-2 text-sm font-medium">
               Single
             </TabsTrigger>
-            <TabsTrigger value="bulk" className="rounded-[10px] px-5 py-2 text-sm font-medium">
+            <TabsTrigger value="bulk" className="rounded-md px-5 py-2 text-sm font-medium">
               Bulk
             </TabsTrigger>
           </TabsList>
@@ -319,7 +319,7 @@ export default function NewDisbursementPage() {
           {/* ===== Single Transfer ===== */}
           <TabsContent value="single">
             <form onSubmit={handleSubmit(onSingleSubmit)} className="space-y-6 sm:space-y-8">
-              <div className="space-y-6 rounded-2xl bg-white/70 border border-border/60 backdrop-blur-sm p-5 shadow-card sm:p-7">
+              <div className="space-y-6 rounded-xl border border-border bg-card p-5 shadow-card sm:p-7">
                 {/* Recipient */}
                 <div className="space-y-2">
                   <Label htmlFor="disbursement-recipient" className="text-sm font-medium text-foreground">
@@ -339,7 +339,7 @@ export default function NewDisbursementPage() {
                           aria-describedby={
                             errors.recipientId ? "disbursement-recipient-error" : undefined
                           }
-                          className="h-auto min-h-11 w-full whitespace-normal bg-white border border-border rounded-xl py-2.5 text-left text-foreground focus:border-ring focus:ring-2 focus:ring-ring/10 *:data-[slot=select-value]:line-clamp-none *:data-[slot=select-value]:whitespace-normal"
+                          className="h-auto min-h-11 w-full whitespace-normal bg-card border border-input rounded-lg py-2.5 text-left text-foreground focus:border-ring focus:ring-2 focus:ring-ring/15 *:data-[slot=select-value]:line-clamp-none *:data-[slot=select-value]:whitespace-normal"
                         >
                           <SelectValue placeholder="Select a recipient">
                             {(val) => {
@@ -386,7 +386,7 @@ export default function NewDisbursementPage() {
                     aria-describedby={
                       errors.amount ? "disbursement-amount-error" : undefined
                     }
-                    className="h-11 bg-white border border-border rounded-xl text-foreground placeholder:text-muted-foreground focus:border-ring focus:ring-2 focus:ring-ring/10"
+                    className="h-11 bg-card border border-input rounded-lg text-foreground placeholder:text-muted-foreground focus:border-ring focus:ring-2 focus:ring-ring/15"
                     {...amountField}
                     onChange={(e) => {
                       e.currentTarget.value = sanitizeAmountInput(e.currentTarget.value);
@@ -414,7 +414,7 @@ export default function NewDisbursementPage() {
                     aria-describedby={
                       errors.purpose ? "disbursement-purpose-error" : undefined
                     }
-                    className="h-11 bg-white border border-border rounded-xl text-foreground placeholder:text-muted-foreground focus:border-ring focus:ring-2 focus:ring-ring/10"
+                    className="h-11 bg-card border border-input rounded-lg text-foreground placeholder:text-muted-foreground focus:border-ring focus:ring-2 focus:ring-ring/15"
                     {...register("purpose")}
                   />
                   {errors.purpose && (
@@ -468,7 +468,7 @@ export default function NewDisbursementPage() {
                                 type="button"
                                 variant="outline"
                                 className={cn(
-                                  "h-11 w-full justify-start rounded-xl border border-border bg-white px-3.5 text-left text-sm font-normal text-foreground shadow-none hover:bg-muted focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/10",
+                                  "h-11 w-full justify-start rounded-lg border border-input bg-card px-3.5 text-left text-sm font-normal text-foreground shadow-none hover:bg-muted focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/15",
                                   !field.value && "text-muted-foreground",
                                 )}
                               />
@@ -523,14 +523,14 @@ export default function NewDisbursementPage() {
                   <Textarea
                     id="disbursement-notes"
                     placeholder="Any additional notes..."
-                    className="bg-white border border-border rounded-xl text-foreground placeholder:text-muted-foreground min-h-[80px] focus:border-ring focus:ring-2 focus:ring-ring/10"
+                    className="bg-card border border-input rounded-lg text-foreground placeholder:text-muted-foreground min-h-[80px] focus:border-ring focus:ring-2 focus:ring-ring/15"
                     {...register("notes")}
                   />
                 </div>
               </div>
 
               {/* Processing Estimate */}
-              <div className="rounded-2xl bg-white/70 border border-border/60 backdrop-blur-sm p-5 shadow-card sm:p-7">
+              <div className="rounded-xl border border-border bg-card p-5 shadow-card sm:p-7">
                 <h3 className="mb-5 text-sm font-semibold text-foreground">
                   Expected timeline
                 </h3>
@@ -540,7 +540,7 @@ export default function NewDisbursementPage() {
               <Button
                 type="submit"
                 disabled={isSubmitting}
-                className="h-12 w-full rounded-xl bg-primary px-5 font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+                className="h-12 w-full rounded-lg bg-primary px-5 font-medium text-primary-foreground transition-colors hover:bg-primary/90"
               >
                 Schedule disbursement
               </Button>
@@ -550,7 +550,7 @@ export default function NewDisbursementPage() {
           {/* ===== Bulk Upload ===== */}
           <TabsContent value="bulk">
             <div className="space-y-8">
-              <div className="rounded-2xl bg-white p-5 shadow-card sm:p-7">
+              <div className="rounded-xl border border-border bg-card p-5 shadow-card sm:p-7">
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                   <div>
                     <h3 className="text-sm font-semibold text-foreground">CSV template</h3>
@@ -562,7 +562,7 @@ export default function NewDisbursementPage() {
                     type="button"
                     variant="outline"
                     onClick={handleDownloadTemplate}
-                    className="shrink-0 rounded-xl border-border bg-secondary text-foreground hover:bg-muted transition-colors"
+                    className="shrink-0"
                   >
                     <Download className="mr-2 size-4" aria-hidden />
                     Download
@@ -573,10 +573,10 @@ export default function NewDisbursementPage() {
               {/* Drag & Drop Zone */}
               <div
                 {...getRootProps()}
-                className={`cursor-pointer rounded-2xl border-2 border-dashed px-6 py-14 text-center transition-all sm:px-10 sm:py-16 ${
+                className={`cursor-pointer rounded-xl border border-dashed px-6 py-14 text-center transition-colors sm:px-10 sm:py-16 ${
                   isDragActive
-                    ? "border-primary bg-muted/20"
-                    : "border-border bg-card hover:border-muted-foreground"
+                    ? "border-primary bg-primary/[0.04]"
+                    : "border-input bg-card hover:border-muted-foreground/60"
                 }`}
               >
                 <input {...getInputProps()} />
@@ -592,7 +592,7 @@ export default function NewDisbursementPage() {
                   </>
                 )}
                 {csvFileName && (
-                  <div className="mt-4 inline-flex items-center gap-2 rounded-lg bg-muted/80 px-3 py-2 text-sm text-foreground">
+                  <div className="mt-4 inline-flex items-center gap-2 rounded-lg border border-border/60 bg-background px-3 py-2 text-sm text-foreground">
                     <FileText className="h-4 w-4 text-muted-foreground" aria-hidden />
                     {csvFileName}
                   </div>
@@ -601,27 +601,27 @@ export default function NewDisbursementPage() {
 
               {/* Validation Panel */}
               {csvResult && (
-                <div className="space-y-5 rounded-2xl bg-white p-5 shadow-card sm:p-7">
+                <div className="space-y-5 rounded-xl border border-border bg-card p-5 shadow-card sm:p-7">
                   <h3 className="text-sm font-semibold text-foreground">Check results</h3>
 
                   <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
-                    <div className="rounded-xl bg-muted p-4">
-                      <p className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">Rows</p>
-                      <p className="mt-1 text-lg font-semibold text-foreground">{csvResult.totalRows}</p>
+                    <div className="rounded-lg border border-border/60 bg-background p-4">
+                      <p className="text-xs text-muted-foreground">Rows</p>
+                      <p className="font-display display-nums mt-1 text-xl font-semibold text-foreground">{csvResult.totalRows}</p>
                     </div>
-                    <div className="rounded-xl bg-muted p-4">
-                      <p className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">Valid</p>
-                      <p className="mt-1 text-lg font-semibold text-primary">
+                    <div className="rounded-lg border border-border/60 bg-background p-4">
+                      <p className="text-xs text-muted-foreground">Valid</p>
+                      <p className="font-display display-nums mt-1 text-xl font-semibold text-success">
                         {csvResult.valid.length}
                       </p>
                     </div>
-                    <div className="rounded-xl bg-muted p-4">
-                      <p className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">Invalid</p>
-                      <p className="mt-1 text-lg font-semibold text-destructive">{csvResult.invalid.length}</p>
+                    <div className="rounded-lg border border-border/60 bg-background p-4">
+                      <p className="text-xs text-muted-foreground">Invalid</p>
+                      <p className="font-display display-nums mt-1 text-xl font-semibold text-danger">{csvResult.invalid.length}</p>
                     </div>
-                    <div className="rounded-xl bg-muted p-4">
-                      <p className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">Total</p>
-                      <p className="mt-1 text-lg font-semibold text-foreground">
+                    <div className="rounded-lg border border-border/60 bg-background p-4">
+                      <p className="text-xs text-muted-foreground">Total</p>
+                      <p className="font-display display-nums mt-1 text-xl font-semibold text-foreground">
                         {formatPHP(csvResult.totalAmount)}
                       </p>
                     </div>
@@ -644,7 +644,7 @@ export default function NewDisbursementPage() {
                           {csvResult.invalid.length} invalid row(s)
                         </span>
                       </div>
-                      <div className="max-h-48 overflow-y-auto rounded-lg bg-muted/80 p-3 space-y-1">
+                      <div className="max-h-48 overflow-y-auto rounded-lg border border-border/60 bg-background p-3 space-y-1">
                         {csvResult.invalid.map((err) => (
                           <div key={err.rowNumber} className="flex items-start gap-2 text-xs">
                             <span className="font-mono text-muted-foreground shrink-0">
@@ -661,7 +661,7 @@ export default function NewDisbursementPage() {
                     type="button"
                     onClick={() => setShowConfirmDialog(true)}
                     disabled={csvResult.invalid.length > 0 || csvResult.valid.length === 0}
-                    className="h-12 w-full rounded-xl bg-primary px-5 font-medium text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-40"
+                    className="h-12 w-full rounded-lg bg-primary px-5 font-medium text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-40"
                   >
                     Schedule {csvResult.valid.length} Disbursement(s)
                   </Button>
@@ -671,7 +671,7 @@ export default function NewDisbursementPage() {
 
             {/* Confirmation Dialog */}
             <Dialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
-              <DialogContent className="bg-white border-border text-foreground">
+              <DialogContent className="text-foreground">
                 <DialogHeader>
                   <DialogTitle className="text-foreground">
                     Confirm Bulk Disbursement
@@ -700,14 +700,13 @@ export default function NewDisbursementPage() {
                     type="button"
                     variant="outline"
                     onClick={() => setShowConfirmDialog(false)}
-                    className="border-border text-foreground"
-                  >
+                    >
                     Cancel
                   </Button>
                   <Button
                     type="button"
                     onClick={handleBulkSubmit}
-                    className="rounded-xl bg-primary px-5 py-2.5 font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+                    className="bg-primary px-5 py-2.5 font-medium text-primary-foreground transition-colors hover:bg-primary/90"
                   >
                     Confirm & Schedule
                   </Button>

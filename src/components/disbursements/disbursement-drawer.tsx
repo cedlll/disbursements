@@ -26,12 +26,12 @@ function DetailRow({
 }: Readonly<{ label: string; value: string; mono?: boolean }>) {
   return (
     <div className="flex items-start justify-between gap-4 py-3">
-      <dt className="shrink-0 pt-0.5 text-xs text-[#74796F]">{label}</dt>
+      <dt className="shrink-0 pt-0.5 text-xs text-muted-foreground">{label}</dt>
       <dd
         className={[
-          "min-w-0 max-w-[min(100%,14rem)] flex-1 text-right text-sm font-medium text-[#1A1D18] sm:max-w-[min(100%,16rem)]",
+          "min-w-0 max-w-[min(100%,14rem)] flex-1 text-right text-sm font-medium text-foreground sm:max-w-[min(100%,16rem)]",
           mono
-            ? "font-mono text-[13px] leading-snug tracking-tight tabular-nums"
+            ? "font-mono text-[13px] leading-snug tabular-nums"
             : "break-words",
         ].join(" ")}
       >
@@ -54,14 +54,14 @@ export function DisbursementDrawer({
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent
         side="right"
-        className="w-full overflow-y-auto border-[#E8EAE4]/60 bg-white sm:max-w-md"
+        className="w-full overflow-y-auto sm:max-w-md"
       >
-        <SheetHeader className="border-b border-[#F5F6F3] px-5 pb-5 sm:px-6">
+        <SheetHeader className="border-b border-border/60 px-5 pb-5 sm:px-6">
           <div className="min-w-0 space-y-1.5 pr-10 sm:pr-11">
-            <SheetTitle className="min-w-0 truncate text-lg font-semibold tracking-tight text-[#1A1D18]">
+            <SheetTitle className="min-w-0 truncate text-lg font-medium text-foreground">
               {disbursement.recipientName}
             </SheetTitle>
-            <p className="font-mono text-[26px] font-bold tabular-nums text-[#1A1D18]">
+            <p className="font-display display-nums text-[28px] font-semibold leading-tight text-foreground">
               {formatPHP(disbursement.amount)}
             </p>
             <StatusBadge status={disbursement.status} size="md" />
@@ -70,12 +70,12 @@ export function DisbursementDrawer({
 
         <div className="flex flex-col gap-8 p-5 sm:p-6">
           {isFailed && (
-            <div className="rounded-2xl border border-[#F5C5C5] bg-[#FCEAEA] p-4">
-              <p className="text-sm font-medium text-[#C94A4A]">
+            <div className="rounded-xl border border-danger/25 bg-danger-light/60 p-4">
+              <p className="text-sm font-semibold text-danger">
                 Disbursement Failed
               </p>
               {disbursement.failureReason && (
-                <p className="mt-2 text-sm leading-relaxed text-[#7D3535]">
+                <p className="mt-2 text-pretty text-sm leading-relaxed text-foreground/80">
                   {disbursement.failureReason}
                 </p>
               )}
@@ -83,7 +83,7 @@ export function DisbursementDrawer({
                 <Button
                   variant="destructive"
                   size="sm"
-                  className="flex-1 rounded-xl bg-[#C94A4A] text-white hover:bg-[#B33E3E]"
+                  className="flex-1 bg-destructive text-white hover:bg-destructive/90"
                   render={<Link href="/disbursements/new" />}
                 >
                   Edit &amp; Retry
@@ -91,7 +91,7 @@ export function DisbursementDrawer({
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="flex-1 text-[#74796F] hover:bg-[#E8EAE4]"
+                  className="flex-1 text-muted-foreground hover:bg-muted"
                   onClick={() => onOpenChange(false)}
                 >
                   Mark as Resolved
@@ -101,17 +101,17 @@ export function DisbursementDrawer({
           )}
 
           <div>
-            <h3 className="mb-4 text-[11px] font-semibold uppercase tracking-wider text-[#74796F]">
+            <h3 className="mb-4 text-sm font-semibold text-foreground">
               Timeline
             </h3>
             <StatusTimeline disbursement={disbursement} />
           </div>
 
           <div>
-            <h3 className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-[#74796F]">
+            <h3 className="mb-3 text-sm font-semibold text-foreground">
               Details
             </h3>
-            <dl className="divide-y divide-[#E8EAE4]/80 rounded-2xl border border-[#E8EAE4]/60 bg-[#F5F6F3] px-4 py-1">
+            <dl className="divide-y divide-border/60 rounded-xl border border-border bg-background px-4 py-1">
               <DetailRow
                 label="Bank"
                 value={getBankName(disbursement.bankCode)}

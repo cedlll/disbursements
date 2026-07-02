@@ -60,12 +60,6 @@ const verificationStatuses: VerificationStatus[] = [
   "failed",
 ];
 
-const verificationDot: Record<VerificationStatus, string> = {
-  verified: "bg-primary",
-  pending: "bg-chart-4",
-  failed: "bg-destructive",
-};
-
 function RecipientEditCell({
   recipient,
   onEdit,
@@ -90,10 +84,10 @@ function VerificationBadge({ status }: Readonly<{ status: VerificationStatus }>)
   const config = VERIFICATION_CONFIG[status];
   return (
     <span
-      className={`inline-flex items-center gap-1.5 rounded-md px-2 py-0.5 text-[11px] font-semibold leading-4 ${config.bgColor} ${config.color}`}
+      className={`inline-flex items-center gap-1.5 text-xs font-medium leading-4 ${config.color}`}
     >
       <span
-        className={`size-[3px] shrink-0 rounded-full ring-1 ring-white/80 ${verificationDot[status]}`}
+        className={`size-1.5 shrink-0 rounded-full ${config.dotColor}`}
         aria-hidden
       />
       {config.label}
@@ -318,7 +312,7 @@ function RecipientsPageContent() {
                 placeholder="Search by name…"
                 value={globalFilter}
                 onChange={(e) => setGlobalFilter(e.currentTarget.value)}
-                className="h-10 bg-white pl-10 text-foreground placeholder:text-muted-foreground border border-border rounded-xl focus:border-ring focus:ring-2 focus:ring-ring/10"
+                className="h-10 bg-card pl-10 text-foreground placeholder:text-muted-foreground border border-input rounded-lg focus:border-ring focus:ring-2 focus:ring-ring/15"
               />
             </div>
           </div>
@@ -331,7 +325,7 @@ function RecipientsPageContent() {
               Bank
             </Label>
             <Select value={bankFilter} onValueChange={(val) => { if (val) setBankFilter(val); }}>
-            <SelectTrigger id="recipients-filter-bank" className="h-10 w-full min-w-[10rem] bg-white border border-border rounded-xl text-foreground sm:w-[11rem]">
+            <SelectTrigger id="recipients-filter-bank" className="h-10 w-full min-w-[10rem] bg-card border border-input rounded-lg text-foreground sm:w-[11rem]">
               <SelectValue placeholder="All banks">
                 {(value) =>
                   !value || value === "all"
@@ -340,7 +334,7 @@ function RecipientsPageContent() {
                 }
               </SelectValue>
             </SelectTrigger>
-            <SelectContent className="bg-white border-border">
+            <SelectContent>
               <SelectItem value="all" label="All banks">
                 All banks
               </SelectItem>
@@ -361,7 +355,7 @@ function RecipientsPageContent() {
               Verification
             </Label>
             <Select value={statusFilter} onValueChange={(val) => { if (val) setStatusFilter(val); }}>
-            <SelectTrigger id="recipients-filter-status" className="h-10 w-full min-w-[9rem] bg-white border border-border rounded-xl text-foreground sm:w-[10rem]">
+            <SelectTrigger id="recipients-filter-status" className="h-10 w-full min-w-[9rem] bg-card border border-input rounded-lg text-foreground sm:w-[10rem]">
               <SelectValue placeholder="All status">
                 {(value) =>
                   !value || value === "all"
@@ -370,7 +364,7 @@ function RecipientsPageContent() {
                 }
               </SelectValue>
             </SelectTrigger>
-            <SelectContent className="bg-white border-border">
+            <SelectContent>
               <SelectItem value="all" label="All status">
                 All status
               </SelectItem>
@@ -385,7 +379,7 @@ function RecipientsPageContent() {
         </div>
 
         <Button
-          className="h-10 shrink-0 rounded-xl bg-primary px-5 text-primary-foreground hover:bg-primary/90 transition-colors"
+          className="h-10 shrink-0 rounded-lg bg-primary px-5 text-primary-foreground hover:bg-primary/90 transition-colors"
           onClick={openAddRecipientSheet}
         >
           <UserPlus className="mr-2 size-4" aria-hidden />
@@ -393,7 +387,7 @@ function RecipientsPageContent() {
         </Button>
       </div>
 
-      <div ref={tableRef} className="overflow-hidden rounded-2xl bg-white/70 border border-border/60 backdrop-blur-sm shadow-card">
+      <div ref={tableRef} className="overflow-hidden rounded-xl border border-border bg-card shadow-card">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
@@ -413,12 +407,12 @@ function RecipientsPageContent() {
                       key={header.id}
                       scope="col"
                       aria-sort={ariaSort}
-                      className="px-5 py-4 text-left text-[11px] font-semibold uppercase tracking-wider text-muted-foreground"
+                      className="px-5 py-3.5 text-left text-xs font-medium text-muted-foreground"
                     >
                       {sortable ? (
                         <button
                           type="button"
-                          className="-mx-1 inline-flex min-h-9 w-[calc(100%+0.5rem)] items-center gap-1 rounded-md px-1 py-1 text-left text-[11px] font-semibold uppercase tracking-wider text-muted-foreground transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/30 focus-visible:outline-none"
+                          className="-mx-1 inline-flex min-h-9 w-[calc(100%+0.5rem)] items-center gap-1 rounded-md px-1 py-1 text-left text-xs font-medium text-muted-foreground transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/30 focus-visible:outline-none"
                           onClick={header.column.getToggleSortingHandler()}
                         >
                           {header.isPlaceholder
@@ -450,7 +444,7 @@ function RecipientsPageContent() {
               {table.getRowModel().rows.map((row) => (
                 <tr
                   key={row.id}
-                  className="border-b border-border transition-colors hover:bg-muted/70"
+                  className="border-b border-border/60 transition-colors hover:bg-muted/40"
                 >
                   {row.getVisibleCells().map((cell) => (
                     <td key={cell.id} className="px-5 py-4">
@@ -487,7 +481,7 @@ function RecipientsPageContent() {
       >
         <SheetContent
           side="right"
-          className="bg-white border-border overflow-y-auto"
+          className="overflow-y-auto"
         >
           <SheetHeader className="px-5 sm:px-6">
             <SheetTitle className="text-lg text-foreground">
@@ -505,7 +499,7 @@ function RecipientsPageContent() {
                 placeholder="Recipient full name"
                 value={formName}
                 onChange={(e) => setFormName(e.currentTarget.value)}
-                className="h-11 bg-white border border-border rounded-xl text-foreground placeholder:text-muted-foreground focus:border-ring focus:ring-2 focus:ring-ring/10"
+                className="h-11 bg-card border border-input rounded-lg text-foreground placeholder:text-muted-foreground focus:border-ring focus:ring-2 focus:ring-ring/15"
               />
             </div>
 
@@ -514,10 +508,10 @@ function RecipientsPageContent() {
                 Bank
               </Label>
               <Select value={formBank} onValueChange={(val) => { if (val) setFormBank(val); }}>
-                <SelectTrigger id="recipient-sheet-bank" className="h-11 w-full bg-white border border-border rounded-xl text-foreground">
+                <SelectTrigger id="recipient-sheet-bank" className="h-11 w-full bg-card border border-input rounded-lg text-foreground">
                   <SelectValue placeholder="Select bank" />
                 </SelectTrigger>
-                <SelectContent className="bg-white border-border">
+                <SelectContent>
                   {PH_BANKS.map((bank) => (
                     <SelectItem key={bank.code} value={bank.code}>
                       {bank.name}
@@ -536,7 +530,7 @@ function RecipientsPageContent() {
                 placeholder="Enter account number"
                 value={formAccount}
                 onChange={(e) => setFormAccount(e.currentTarget.value)}
-                className="h-11 bg-white border border-border rounded-xl text-foreground placeholder:text-muted-foreground focus:border-ring focus:ring-2 focus:ring-ring/10"
+                className="h-11 bg-card border border-input rounded-lg text-foreground placeholder:text-muted-foreground focus:border-ring focus:ring-2 focus:ring-ring/15"
               />
             </div>
 
@@ -567,7 +561,7 @@ function RecipientsPageContent() {
             </fieldset>
 
             <Button
-              className="mt-4 h-11 w-full rounded-xl bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
+              className="mt-4 h-11 w-full rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
               onClick={handleSaveRecipient}
             >
               {sheetMode === "edit" ? "Save changes" : "Save"}
