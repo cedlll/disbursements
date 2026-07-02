@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import type { ReactNode } from "react";
 import {
   ArrowUpRight,
@@ -115,8 +115,18 @@ export default function DashboardPage() {
   const [selectedDisbursement, setSelectedDisbursement] =
     useState<Disbursement | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [recentPage, setRecentPage] = useState(0);
+  // Page state is keyed to the query it was set for, so a new search
+  // derives back to page 0 without an effect.
+  const [recentPageState, setRecentPageState] = useState({
+    query: "",
+    page: 0,
+  });
   const [activityQuery, setActivityQuery] = useState("");
+
+  const recentPage =
+    recentPageState.query === activityQuery ? recentPageState.page : 0;
+  const setRecentPage = (page: number) =>
+    setRecentPageState({ query: activityQuery, page });
 
   const monthlyTotal = getMonthlyTotal();
   const pending = getPendingCount();
@@ -155,15 +165,6 @@ export default function DashboardPage() {
     recentPageSafe * RECENT_PAGE_SIZE,
     recentPageSafe * RECENT_PAGE_SIZE + RECENT_PAGE_SIZE,
   );
-
-  useEffect(() => {
-    const maxPage = Math.max(0, Math.ceil(recentTotal / RECENT_PAGE_SIZE) - 1);
-    setRecentPage((p) => Math.min(p, maxPage));
-  }, [recentTotal]);
-
-  useEffect(() => {
-    setRecentPage(0);
-  }, [activityQuery]);
 
   const cardsRef = useStaggerReveal<HTMLDivElement>({ y: 20, stagger: 0.1 });
   const tableRef = useTableReveal<HTMLDivElement>();
@@ -333,7 +334,7 @@ export default function DashboardPage() {
                   variant="outline"
                   size="sm"
                   disabled={recentPageSafe <= 0}
-                  onClick={() => setRecentPage((p) => Math.max(0, p - 1))}
+                  onClick={() => setRecentPage(Math.max(0, recentPageSafe - 1))}
                   className="rounded-xl border-border text-muted-foreground hover:bg-muted disabled:opacity-30"
                 >
                   <ChevronLeft className="mr-1 h-3.5 w-3.5" />
@@ -348,8 +349,8 @@ export default function DashboardPage() {
                   size="sm"
                   disabled={recentPageSafe >= recentPageCount - 1}
                   onClick={() =>
-                    setRecentPage((p) =>
-                      Math.min(recentPageCount - 1, p + 1),
+                    setRecentPage(
+                      Math.min(recentPageCount - 1, recentPageSafe + 1),
                     )
                   }
                   className="rounded-xl border-border text-muted-foreground hover:bg-muted disabled:opacity-30"
